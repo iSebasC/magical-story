@@ -109,18 +109,6 @@ export const HeroSection: React.FC = () => {
 
           {/* Visual */}
           <div className="flex justify-center lg:justify-end relative">
-            {/* Chip left */}
-            <div
-              className="hidden lg:flex absolute -left-16 top-10 items-center gap-2 bg-white rounded-2xl px-3.5 py-2.5 shadow-lg border border-ink/5 text-xs font-semibold text-inks animate-floatsm z-10"
-              style={{ animationDelay: '.5s' }}
-            >
-              <span className="text-lg">🎧</span>
-              <div>
-                <div className="text-[11px] font-bold">Audio narration</div>
-                <div className="text-[10px] text-inkm">Page by page</div>
-              </div>
-            </div>
-
             {/* Book card */}
             <div className="w-full max-w-sm bg-white rounded-4xl overflow-hidden shadow-[0_20px_56px_rgba(52,78,122,.15)] animate-float">
               {/* Illustration */}
@@ -272,18 +260,6 @@ export const HeroSection: React.FC = () => {
                   <div className="w-1.5 h-1.5 rounded-full bg-cream2 transition-all"></div>
                   <div className="w-1.5 h-1.5 rounded-full bg-cream2 transition-all"></div>
                 </div>
-              </div>
-            </div>
-
-            {/* Chip right */}
-            <div
-              className="hidden lg:flex absolute -right-14 bottom-24 items-center gap-2 bg-white rounded-2xl px-3.5 py-2.5 shadow-lg border border-ink/5 text-xs font-semibold text-inks animate-floatsm z-10"
-              style={{ animationDelay: '1.4s' }}
-            >
-              <span className="text-lg">🏫</span>
-              <div>
-                <div className="text-[11px] font-bold">Classroom mode</div>
-                <div className="text-[10px] text-inkm">28 students reading</div>
               </div>
             </div>
           </div>

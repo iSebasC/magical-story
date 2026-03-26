@@ -6,7 +6,7 @@ import {
   HowItWorksSection,
   FeaturesSection,
   SchoolsSection,
-  TestimonialsSection,
+  // TestimonialsSection,
   PricingSection,
   CTASection,
 } from '@/components/sections';
@@ -25,7 +25,7 @@ export default function HomePage() {
         <HowItWorksSection />
         <FeaturesSection />
         <SchoolsSection />
-        <TestimonialsSection />
+        {/* <TestimonialsSection /> */}
         <PricingSection />
         <CTASection />
       </main>
