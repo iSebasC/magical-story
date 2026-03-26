@@ -1,26 +1,178 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════
+   VARIABLES
+═══════════════════════════ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FFFDF7;
+  --foreground: #344E7A;
 }
 
+/* ═══════════════════════════
+   THEME CONFIGURATION
+═══════════════════════════ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Colores */
+  --color-cream: #FFFDF7;
+  --color-cream2: #FFF3E0;
+  --color-cream3: #FFE4C4;
+  --color-orange: #FF6B35;
+  --color-oranged: #E05520;
+  --color-teal: #00BCD4;
+  --color-teald: #0097A7;
+  --color-plum: #7E57C2;
+  --color-sun: #FFD54F;
+  --color-ink: #344E7A;
+  --color-inks: #4A628A;
+  --color-inkm: #7A90B0;
+  --color-inkl: #B0C0D4;
+  --color-navy: #1F3872;
+
+  /* Fuentes */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+
+  /* Animaciones */
+  --animate-blink: blink 2s ease-in-out infinite;
+  --animate-float: float 5s ease-in-out infinite;
+  --animate-floatsm: float 4s ease-in-out infinite;
+  --animate-wv1: wv 1.4s ease-in-out infinite 0s;
+  --animate-wv2: wv 1.4s ease-in-out infinite .1s;
+  --animate-wv3: wv 1.4s ease-in-out infinite .2s;
+  --animate-wv4: wv 1.4s ease-in-out infinite .3s;
+  --animate-wv5: wv 1.4s ease-in-out infinite .4s;
+  --animate-wv6: wv 1.4s ease-in-out infinite .3s;
+  --animate-wv7: wv 1.4s ease-in-out infinite .2s;
+  --animate-wv8: wv 1.4s ease-in-out infinite .1s;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ═══════════════════════════
+   BASE STYLES
+═══════════════════════════ */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* ═══════════════════════════
+   ANIMACIONES KEYFRAMES
+═══════════════════════════ */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .3; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes wv {
+  0%, 100% { transform: scaleY(1); opacity: .65; }
+  50% { transform: scaleY(.3); opacity: .3; }
+}
+
+@keyframes lineIn {
+  to { transform: scaleX(1); }
+}
+
+/* ═══════════════════════════
+   UTILIDADES CUSTOM
+═══════════════════════════ */
+
+/* Línea animada bajo palabras */
+.lined-word {
+  position: relative;
+  display: inline-block;
+}
+
+.lined-word::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  right: 0;
+  height: 3px;
+  background: #FFD54F;
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: lineIn .9s ease 1s forwards;
+}
+
+/* Animaciones aplicables */
+.animate-blink {
+  animation: var(--animate-blink);
+}
+
+.animate-float {
+  animation: var(--animate-float);
+}
+
+.animate-floatsm {
+  animation: var(--animate-floatsm);
+}
+
+.animate-wv1 { animation: var(--animate-wv1); }
+.animate-wv2 { animation: var(--animate-wv2); }
+.animate-wv3 { animation: var(--animate-wv3); }
+.animate-wv4 { animation: var(--animate-wv4); }
+.animate-wv5 { animation: var(--animate-wv5); }
+.animate-wv6 { animation: var(--animate-wv6); }
+.animate-wv7 { animation: var(--animate-wv7); }
+.animate-wv8 { animation: var(--animate-wv8); }
+
+/* Wave bar para efectos de sonido */
+.wave-bar {
+  display: block;
+  width: 3px;
+  background: #FF6B35;
+  border-radius: 2px;
+  opacity: .65;
+  animation: wv 1.4s ease-in-out infinite;
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal.delay-1 {
+  transition-delay: .08s;
+}
+
+.reveal.delay-2 {
+  transition-delay: .16s;
+}
+
+.reveal.delay-3 {
+  transition-delay: .24s;
+}
+
+.reveal.delay-4 {
+  transition-delay: .32s;
+}
+
+/* Border radius custom */
+.rounded-4xl {
+  border-radius: 2rem;
+}
+
+/* ═══════════════════════════
+   SMOOTH SCROLL
+═══════════════════════════ */
+html {
+  scroll-behavior: smooth;
 }
