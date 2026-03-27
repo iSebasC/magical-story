@@ -13,30 +13,19 @@ export const HeroSection: React.FC = () => {
 
     const revealElements = sectionRef.current.querySelectorAll('.reveal');
     
-    // Intersection Observer para reveal on scroll
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0, rootMargin: '0px' }
-    );
-
-    revealElements.forEach((el) => observer.observe(el));
-
-    // Fallback: mostrar todo después de 600ms
-    const fallbackTimer = setTimeout(() => {
-      revealElements.forEach((el) => el.classList.add('in'));
-    }, 600);
-
-    return () => {
-      observer.disconnect();
-      clearTimeout(fallbackTimer);
-    };
+    // Activar animaciones secuencialmente al montar el componente
+    revealElements.forEach((el, index) => {
+      // Pequeño delay base + delay por índice para efecto escalonado
+      const baseDelay = 100; // delay inicial
+      const incrementalDelay = el.classList.contains('delay-1') ? 80 :
+                               el.classList.contains('delay-2') ? 160 :
+                               el.classList.contains('delay-3') ? 240 :
+                               el.classList.contains('delay-4') ? 320 : 0;
+      
+      setTimeout(() => {
+        el.classList.add('in');
+      }, baseDelay + incrementalDelay);
+    });
   }, []);
 
   return (
@@ -108,7 +97,7 @@ export const HeroSection: React.FC = () => {
           </div>
 
           {/* Visual */}
-          <div className="flex justify-center lg:justify-end relative">
+          <div className="reveal delay-2 flex justify-center lg:justify-end relative">
             {/* Book card */}
             <div className="w-full max-w-sm bg-white rounded-4xl overflow-hidden shadow-[0_20px_56px_rgba(52,78,122,.15)] animate-float">
               {/* Illustration */}

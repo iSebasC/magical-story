@@ -16,10 +16,11 @@ export default function FeaturesSection() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('in');
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.15, rootMargin: '-50px' }
     );
 
     reveals.forEach((el) => observer.observe(el));
@@ -38,14 +39,14 @@ export default function FeaturesSection() {
   return (
     <section ref={sectionRef} className="py-24 bg-cream" id="features">
       <div className="max-w-6xl mx-auto px-7">
-        <div className="reveal mb-14">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase text-oranged mb-3">
+        <div className="mb-14">
+          <div className="reveal inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase text-oranged mb-3">
             <span className="w-4 h-0.5 bg-orange rounded"></span>Features
           </div>
-          <h2 className="font-display text-4xl font-bold text-ink mb-3">
+          <h2 className="reveal delay-1 font-display text-4xl font-bold text-ink mb-3">
             Everything in <em className="font-normal" style={{ fontStyle: 'italic', color: '#FF6B35' }}>one place</em>
           </h2>
-          <p className="text-base text-inkm max-w-lg leading-relaxed">
+          <p className="reveal delay-2 text-base text-inkm max-w-lg leading-relaxed">
             Designed for the child's joy and the teacher's peace of mind.
           </p>
         </div>
@@ -54,7 +55,7 @@ export default function FeaturesSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4">
           
           {/* bc-1 span 5 */}
-          <div className="reveal lg:col-span-5 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
+          <div className="reveal delay-3 lg:col-span-5 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
             <div className="w-12 h-12 rounded-xl bg-orange/10 flex items-center justify-center text-2xl mb-4">📖</div>
             <h3 className="font-display text-lg font-semibold mb-2">Page-by-page reading</h3>
             <p className="text-sm text-inkm leading-relaxed">
@@ -63,7 +64,7 @@ export default function FeaturesSection() {
           </div>
 
           {/* bc-2 span 7 — dashboard with progress bars */}
-          <div className="reveal delay-1 lg:col-span-7 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all grid md:grid-cols-2 gap-6 items-center">
+          <div className="reveal delay-4 lg:col-span-7 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all grid md:grid-cols-2 gap-6 items-center">
             <div>
               <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center text-2xl mb-4">📊</div>
               <h3 className="font-display text-lg font-semibold mb-2">Live classroom dashboard</h3>
@@ -104,7 +105,7 @@ export default function FeaturesSection() {
           </div>
 
           {/* bc-3 span 4 */}
-          <div className="reveal lg:col-span-4 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
+          <div className="reveal delay-5 lg:col-span-4 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
             <div className="w-12 h-12 rounded-xl bg-plum/10 flex items-center justify-center text-2xl mb-4">🎙️</div>
             <h3 className="font-display text-lg font-semibold mb-2">Professional audio narration</h3>
             <p className="text-sm text-inkm leading-relaxed">
@@ -113,7 +114,7 @@ export default function FeaturesSection() {
           </div>
 
           {/* bc-4 span 4 */}
-          <div className="reveal delay-1 lg:col-span-4 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
+          <div className="reveal delay-6 lg:col-span-4 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
             <div className="w-12 h-12 rounded-xl bg-sun/30 flex items-center justify-center text-2xl mb-4">🎯</div>
             <h3 className="font-display text-lg font-semibold mb-2">Story of the day</h3>
             <p className="text-sm text-inkm leading-relaxed">
@@ -122,7 +123,7 @@ export default function FeaturesSection() {
           </div>
 
           {/* bc-5 span 4 */}
-          <div className="reveal delay-2 lg:col-span-4 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
+          <div className="reveal delay-7 lg:col-span-4 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
             <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-2xl mb-4">🛡️</div>
             <h3 className="font-display text-lg font-semibold mb-2">Safe for children</h3>
             <p className="text-sm text-inkm leading-relaxed">

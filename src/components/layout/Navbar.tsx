@@ -97,7 +97,7 @@ export const Navbar: React.FC = () => {
               </a>
               <a
                 href="/login"
-                className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-orange text-white rounded-full shadow-[0_4px_0_#E05520] active:shadow-[0_2px_0_#E05520] active:translate-y-0.5 transition-all"
+                className="hidden md:inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold bg-orange text-white rounded-full shadow-[0_4px_0_#E05520] active:shadow-[0_2px_0_#E05520] active:translate-y-0.5 transition-all"
               >
                 Get started free
               </a>

@@ -19,10 +19,11 @@ export const CTASection: React.FC = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('in');
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.15, rootMargin: '-50px' }
     );
 
     reveals.forEach((el) => observer.observe(el));

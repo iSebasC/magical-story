@@ -165,6 +165,18 @@ body {
   transition-delay: .32s;
 }
 
+.reveal.delay-5 {
+  transition-delay: .40s;
+}
+
+.reveal.delay-6 {
+  transition-delay: .48s;
+}
+
+.reveal.delay-7 {
+  transition-delay: .56s;
+}
+
 /* Border radius custom */
 .rounded-4xl {
   border-radius: 2rem;

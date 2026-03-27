@@ -16,10 +16,11 @@ export default function PricingSection() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('in');
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.15, rootMargin: '-50px' }
     );
 
     reveals.forEach((el) => observer.observe(el));
@@ -37,18 +38,18 @@ export default function PricingSection() {
   return (
     <section ref={sectionRef} className="py-24 bg-cream" id="pricing">
       <div className="max-w-6xl mx-auto px-7">
-        <div className="reveal text-center mb-14">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase text-oranged mb-3">
+        <div className="text-center mb-14">
+          <div className="reveal inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase text-oranged mb-3">
             <span className="w-4 h-0.5 bg-orange rounded"></span>Pricing
           </div>
-          <h2 className="font-display text-4xl font-bold text-ink mb-3">Simple, honest pricing</h2>
-          <p className="text-base text-inkm max-w-md mx-auto leading-relaxed">No hidden fees. Cancel any time. Start free.</p>
+          <h2 className="reveal delay-1 font-display text-4xl font-bold text-ink mb-3">Simple, honest pricing</h2>
+          <p className="reveal delay-2 text-base text-inkm max-w-md mx-auto leading-relaxed">No hidden fees. Cancel any time. Start free.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-3xl mx-auto">
 
           {/* Starter */}
-          <div className="reveal bg-white rounded-3xl p-8 border-2 border-cream2 relative hover:-translate-y-1.5 hover:shadow-xl transition-all">
+          <div className="reveal delay-3 bg-white rounded-3xl p-8 border-2 border-cream2 relative hover:-translate-y-1.5 hover:shadow-xl transition-all">
             <div className="font-display font-bold mb-1">🌱 Starter</div>
             <div className="text-xs text-inkm mb-5">Explore the platform, no strings</div>
             <div className="font-display text-5xl font-bold mb-1"><sup className="text-lg align-super">$</sup>0</div>
@@ -64,7 +65,7 @@ export default function PricingSection() {
           </div>
 
           {/* Classroom — featured */}
-          <div className="reveal delay-1 bg-orange rounded-3xl p-8 border-2 border-orange relative md:scale-105 hover:shadow-xl transition-all hover:-translate-y-1">
+          <div className="reveal delay-4 bg-orange rounded-3xl p-8 border-2 border-orange relative md:scale-105 hover:shadow-xl transition-all hover:-translate-y-1">
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-sun text-ink text-[11px] font-bold px-3.5 py-1 rounded-full whitespace-nowrap">⭐ Most popular</div>
             <div className="font-display font-bold text-white mb-1">🏫 Classroom</div>
             <div className="text-xs text-white/70 mb-5">Everything a teacher needs, day one</div>
@@ -81,7 +82,7 @@ export default function PricingSection() {
           </div>
 
           {/* Institution */}
-          <div className="reveal delay-2 bg-white rounded-3xl p-8 border-2 border-cream2 relative hover:-translate-y-1.5 hover:shadow-xl transition-all">
+          <div className="reveal delay-5 bg-white rounded-3xl p-8 border-2 border-cream2 relative hover:-translate-y-1.5 hover:shadow-xl transition-all">
             <div className="font-display font-bold mb-1">🎓 Institution</div>
             <div className="text-xs text-inkm mb-5">For the whole school, centrally managed</div>
             <div className="font-display text-3xl font-bold mb-1 pt-2">Custom</div>
