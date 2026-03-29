@@ -61,7 +61,7 @@ export default function PricingSection() {
               <li className="flex items-center gap-2 text-sm opacity-35"><span className="w-5 h-5 rounded-full bg-cream2 text-inkm flex items-center justify-center text-[10px] font-bold flex-shrink-0">—</span>Teacher dashboard</li>
               <li className="flex items-center gap-2 text-sm opacity-35"><span className="w-5 h-5 rounded-full bg-cream2 text-inkm flex items-center justify-center text-[10px] font-bold flex-shrink-0">—</span>Story scheduling</li>
             </ul>
-            <a href="/login" className="flex w-full items-center justify-center py-3 rounded-full text-sm font-semibold text-inks border-2 border-cream2 hover:border-cream3 hover:bg-white transition-all">Get started free</a>
+            <a href="/login?tab=register" className="flex w-full items-center justify-center py-3 rounded-full text-sm font-semibold text-inks border-2 border-cream2 hover:border-cream3 hover:bg-white transition-all">Get started free</a>
           </div>
 
           {/* Classroom — featured */}

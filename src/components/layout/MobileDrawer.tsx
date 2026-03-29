@@ -79,7 +79,7 @@ export const MobileDrawer: React.FC<MobileDrawerProps> = ({ isOpen, onClose }) =
 
         {/* CTA */}
         <a
-          href="/login"
+          href="/login?tab=register"
           className="mt-4 flex justify-center items-center px-6 py-3 rounded-full text-sm font-semibold text-white bg-orange hover:bg-oranged transition-all"
         >
           Get started free →

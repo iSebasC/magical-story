@@ -59,7 +59,7 @@ export const HeroSection: React.FC = () => {
 
             <div className="reveal delay-3 flex flex-wrap items-center gap-3 mb-10">
               <a
-                href="/auth?tab=register"
+                href="/login?tab=register"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-base font-semibold text-white bg-orange shadow-[0_4px_18px_rgba(255,107,53,.38)] hover:bg-oranged hover:shadow-[0_8px_28px_rgba(255,107,53,.48)] hover:-translate-y-0.5 transition-all"
               >
                 Start for free →

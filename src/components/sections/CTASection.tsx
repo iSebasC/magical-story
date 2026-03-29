@@ -64,7 +64,7 @@ export const CTASection: React.FC = () => {
         </p>
         <div className="reveal delay-2 flex flex-wrap justify-center gap-3 mb-5">
           <a
-            href="/login"
+            href="/login?tab=register"
             className="inline-flex items-center justify-center gap-1.5 px-6 py-3 text-sm font-semibold bg-orange text-white rounded-full shadow-[0_4px_0_#E05520] active:shadow-[0_2px_0_#E05520] active:translate-y-0.5 transition-all"
           >
             Start for free →

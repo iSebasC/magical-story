@@ -103,7 +103,7 @@ export const Footer: React.FC = () => {
                 </a>
               </li>
               <li>
-                <a href="/login" className="text-sm text-white/80 hover:text-white transition-colors">
+                <a href="/login?tab=register" className="text-sm text-white/80 hover:text-white transition-colors">
                   Get started free
                 </a>
               </li>
