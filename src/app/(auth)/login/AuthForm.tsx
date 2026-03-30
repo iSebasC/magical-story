@@ -2,17 +2,15 @@
 
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Mail, Lock, User, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
+import { login, register } from '@/lib/auth';
 
 type Tab = 'login' | 'register';
 
 export default function AuthForm() {
-  const searchParams = useSearchParams();
-  
-  // Calcular tab inicial directamente desde URL
-  const initialTab = (searchParams.get('tab') === 'register' ? 'register' : 'login') as Tab;
-  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<Tab>('login');
 
   const [termsChecked, setTermsChecked] = useState(false);
   const [showPassword, setShowPassword] = useState({
@@ -78,12 +76,25 @@ export default function AuthForm() {
     if (!valid) return;
 
     setLoading(true);
-    // Simular llamada API
-    setTimeout(() => {
+    
+    try {
+      const response = await login(loginForm.email, loginForm.password);
+      
       setLoading(false);
-      showToast('✅', 'Signed in successfully!');
-      // Aquí redirigir al dashboard o hacer la llamada real
-    }, 1600);
+      
+      if (response.success) {
+        showToast('✅', response.message || 'Signed in successfully!');
+        // Redirigir al dashboard después de un momento
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1000);
+      } else {
+        showToast('❌', response.message || 'Login failed');
+      }
+    } catch {
+      setLoading(false);
+      showToast('❌', 'An error occurred');
+    }
   };
 
   const handleRegister = async (e: FormEvent) => {
@@ -112,12 +123,29 @@ export default function AuthForm() {
     if (!valid) return;
 
     setLoading(true);
-    // Simular llamada API
-    setTimeout(() => {
+    
+    try {
+      const response = await register(
+        registerForm.name,
+        registerForm.email,
+        registerForm.password
+      );
+      
       setLoading(false);
-      showToast('🎉', 'Account created! Check your email.');
-      // Aquí hacer la llamada real
-    }, 1800);
+      
+      if (response.success) {
+        showToast('🎉', response.message || 'Account created successfully!');
+        // Redirigir al dashboard después de un momento
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1000);
+      } else {
+        showToast('❌', response.message || 'Registration failed');
+      }
+    } catch {
+      setLoading(false);
+      showToast('❌', 'An error occurred');
+    }
   };
 
   return (
