@@ -160,7 +160,7 @@ export default function AuthForm() {
         <span>{toast.message}</span>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center min-h-screen px-6 py-12 lg:px-10">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 lg:px-10">
         {/* Mobile logo */}
         <div className="flex lg:hidden items-center gap-2.5 mb-8 self-start">
           <div className="w-9 h-9 bg-orange rounded-xl flex items-center justify-center text-xl shadow-[0_3px_0_#E05520]">

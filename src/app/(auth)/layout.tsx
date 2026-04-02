@@ -4,9 +4,9 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex bg-cream overflow-x-hidden">
+    <div className="min-h-screen flex bg-cream overflow-hidden">
       {/* LEFT PANEL — Decorativo (solo en desktop) */}
-      <div className="hidden lg:flex flex-col justify-between w-1/2 min-h-screen relative overflow-hidden p-10" style={{
+      <div className="hidden lg:flex flex-col justify-between w-1/2 relative overflow-hidden p-10" style={{
         background: 'linear-gradient(150deg, #00ACC1 0%, #26C6DA 35%, #7E57C2 100%)'
       }}>
         
