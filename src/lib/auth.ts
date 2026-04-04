@@ -1,71 +1,46 @@
-// Autenticación simulada con localStorage
+import { supabase } from './supabase'
 
 export interface User {
   id: string;
-  name: string;
+  name?: string;
   email: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 export interface AuthResponse {
   success: boolean;
   user?: User;
   message?: string;
+  error?: any;
 }
-
-// Clave para almacenar usuarios registrados
-const USERS_KEY = 'magicalstory_users';
-const AUTH_USER_KEY = 'magicalstory_auth_user';
-
-// Obtener todos los usuarios registrados
-const getUsers = (): User[] => {
-  if (typeof window === 'undefined') return [];
-  const users = localStorage.getItem(USERS_KEY);
-  return users ? JSON.parse(users) : [];
-};
-
-// Guardar usuarios
-const saveUsers = (users: User[]) => {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-};
 
 // Registrar nuevo usuario
 export const register = async (
   name: string,
   email: string,
-  _password: string
+  password: string
 ): Promise<AuthResponse> => {
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simular delay de red
-
-  const users = getUsers();
-  
-  // Verificar si el email ya existe
-  if (users.find(u => u.email === email)) {
-    return {
-      success: false,
-      message: 'Email already registered'
-    };
-  }
-
-  // Crear nuevo usuario
-  const newUser: User = {
-    id: crypto.randomUUID(),
-    name,
+  const { data, error } = await supabase.auth.signUp({
     email,
-    createdAt: new Date().toISOString()
-  };
+    password,
+    options: {
+      data: {
+        name: name
+      }
+    }
+  });
 
-  // Guardar usuario
-  users.push(newUser);
-  saveUsers(users);
-
-  // Guardar en localStorage (simulando sesión)
-  localStorage.setItem(AUTH_USER_KEY, JSON.stringify(newUser));
+  if (error) {
+    return { success: false, message: error.message };
+  }
 
   return {
     success: true,
-    user: newUser,
+    user: data.user ? {
+      id: data.user.id,
+      email: data.user.email!,
+      name: data.user.user_metadata?.name
+    } : undefined,
     message: 'Account created successfully!'
   };
 };
@@ -73,44 +48,48 @@ export const register = async (
 // Login
 export const login = async (
   email: string,
-  _password: string
+  password: string
 ): Promise<AuthResponse> => {
-  await new Promise(resolve => setTimeout(resolve, 800)); // Simular delay de red
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-  const users = getUsers();
-  const user = users.find(u => u.email === email);
-
-  if (!user) {
-    return {
-      success: false,
-      message: 'Email or password incorrect'
-    };
+  if (error) {
+    return { success: false, message: error.message };
   }
-
-  // Guardar en localStorage (simulando sesión)
-  localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
 
   return {
     success: true,
-    user,
+    user: data.user ? {
+      id: data.user.id,
+      email: data.user.email!,
+      name: data.user.user_metadata?.name
+    } : undefined,
     message: 'Signed in successfully!'
   };
 };
 
 // Logout
-export const logout = () => {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem(AUTH_USER_KEY);
+export const logout = async () => {
+  await supabase.auth.signOut();
 };
 
 // Obtener usuario actual
-export const getCurrentUser = (): User | null => {
-  if (typeof window === 'undefined') return null;
-  const user = localStorage.getItem(AUTH_USER_KEY);
-  return user ? JSON.parse(user) : null;
+export const getCurrentUser = async (): Promise<User | null> => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  return {
+    id: user.id,
+    email: user.email!,
+    name: user.user_metadata?.name,
+    createdAt: user.created_at
+  };
 };
 
 // Verificar si está autenticado
-export const isAuthenticated = (): boolean => {
-  return getCurrentUser() !== null;
+export const isAuthenticated = async (): Promise<boolean> => {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session !== null;
 };
