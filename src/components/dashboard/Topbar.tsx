@@ -1,0 +1,48 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+
+interface TopbarProps {
+  title: string;
+  onMenuClick: () => void;
+}
+
+export function Topbar({ title, onMenuClick }: TopbarProps) {
+  const [userName, setUserName] = useState('User');
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('magicalstory_auth_user') || '{}');
+    if (user.name) {
+      setUserName(user.name.split(' ')[0]);
+    }
+  }, []);
+
+  return (
+    <div 
+      className="h-15 bg-white border-b border-cream2 flex items-center justify-between px-5 lg:px-8 sticky top-0 z-10" 
+      style={{ height: '60px' }}
+    >
+      <div className="flex items-center gap-3">
+        <button 
+          onClick={onMenuClick}
+          className="lg:hidden flex flex-col gap-1.5 p-1"
+        >
+          <span className="block w-5 h-0.5 bg-ink rounded-full" />
+          <span className="block w-5 h-0.5 bg-ink rounded-full" />
+          <span className="block w-5 h-0.5 bg-ink rounded-full" />
+        </button>
+        <span className="font-display text-base font-semibold text-ink">{title}</span>
+      </div>
+      <div className="flex items-center gap-2.5">
+        <span className="text-sm font-medium text-inks hidden sm:block">{userName}</span>
+        <Link 
+          href="/dashboard/profile"
+          className="w-9 h-9 rounded-full bg-cream2 border-2 border-cream3 flex items-center justify-center text-base cursor-pointer hover:border-orange transition-colors"
+        >
+          👤
+        </Link>
+      </div>
+    </div>
+  );
+}

@@ -1,9 +1,16 @@
 'use client';
 
-import { Sidebar } from '@/components/dashboard/Sidebar';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { isAuthenticated } from '@/lib/auth';
+import { Sidebar, Topbar } from '@/components/dashboard';
+
+const PAGE_TITLES: Record<string, string> = {
+  '/dashboard': 'Home',
+  '/dashboard/library': 'Library',
+  // '/dashboard/plan': 'My Plan',
+  '/dashboard/profile': 'Profile'
+};
 
 export default function DashboardLayout({
   children,
@@ -11,7 +18,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     // Verificar autenticación
@@ -38,16 +47,18 @@ export default function DashboardLayout({
     );
   }
 
+  const pageTitle = PAGE_TITLES[pathname] || 'Dashboard';
+
   return (
-    <div className="flex h-screen bg-cream overflow-hidden">
-      <Sidebar />
+    <div className="bg-cream text-ink flex min-h-screen">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      <main className="flex-1 overflow-y-auto">
-        <div className="p-4 md:p-8">
-          {/* Contenido */}
+      <div className="flex-1 flex flex-col min-h-screen lg:ml-60">
+        <Topbar title={pageTitle} onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1">
           {children}
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
