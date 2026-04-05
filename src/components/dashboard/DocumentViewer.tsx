@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { PageDots } from '@/components/ui';
 
 interface DocumentViewerProps {
   isOpen: boolean;
@@ -212,7 +211,16 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
             </button>
 
             <div className="flex flex-col items-center gap-2">
-              <PageDots total={pages.length} current={currentPage} />
+              <div className="flex gap-1">
+                {pages.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-1.5 h-1.5 rounded-full transition-all ${
+                      index === currentPage ? 'bg-orange w-6' : 'bg-cream3'
+                    }`}
+                  />
+                ))}
+              </div>
               <span className="text-xs text-inkm font-medium">
                 Page {currentPage + 1} of {pages.length}
               </span>

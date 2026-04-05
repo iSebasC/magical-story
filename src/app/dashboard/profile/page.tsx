@@ -9,14 +9,22 @@ import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [user, setUser] = useState({ name: '', email: '', createdAt: '' });
+  const [user, setUser] = useState<{ name?: string; email: string; createdAt?: string }>({ 
+    name: '', 
+    email: '', 
+    createdAt: '' 
+  });
   const [plan, setPlan] = useState<PlanType>('free');
 
   useEffect(() => {
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-      setUser(currentUser);
-    }
+    const fetchUser = async () => {
+      const currentUser = await getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
+      }
+    };
+    
+    fetchUser();
 
     const storedPlan = localStorage.getItem('magicalstory_plan') as PlanType;
     if (storedPlan) {
@@ -78,11 +86,11 @@ export default function ProfilePage() {
                   Member Since
                 </div>
                 <div className="text-sm text-inks">
-                  {new Date(user.createdAt).toLocaleDateString('en-US', {
+                  {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
-                  })}
+                  }) : 'N/A'}
                 </div>
               </div>
             </div>
