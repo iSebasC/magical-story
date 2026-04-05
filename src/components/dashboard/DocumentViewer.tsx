@@ -4,6 +4,39 @@ import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
+/**
+ * DocumentViewer con Protecciones Visuales Frontend
+ * 
+ * ✅ QUÉ SÍ PROTEGE:
+ * - Bloquea clic derecho (onContextMenu) sobre imagen y contenedor
+ * - Evita arrastrar imagen (draggable={false}, onDragStart prevented)
+ * - Impide selección de texto/imagen (user-select: none)
+ * - Capa overlay transparente dificulta inspección directa
+ * - pointer-events: none en imagen evita interacciones directas
+ * - URLs temporales (signed URLs con expiración) dificultan acceso persistente
+ * 
+ * ❌ QUÉ NO PROTEGE (limitaciones de frontend):
+ * - DevTools: usuario puede inspeccionar DOM y copiar URL firmada
+ * - Screenshot/captura de pantalla (Print Screen, herramientas OS)
+ * - Extensiones de navegador que capturan contenido
+ * - Network tab: usuario puede ver requests y copiar URLs
+ * - Deshabilitar JavaScript para saltarse eventos
+ * 
+ * 💡 POR QUÉ FRONTEND SOLO DIFICULTA:
+ * - Todo lo que se renderiza en navegador es accesible al usuario
+ * - JavaScript se ejecuta en cliente (controlado por usuario)
+ * - DOM es inspeccionable por naturaleza de HTML
+ * - Solo backend puede restringir ACCESO real a recursos
+ * 
+ * 🔐 REFUERZOS RECOMENDADOS (Backend):
+ * - Watermarks dinámicos con user_id embebidos en imagen
+ * - Rate limiting en generación de signed URLs
+ * - Logs de acceso para detectar patrones sospechosos
+ * - URLs de un solo uso (invalidar tras primera carga)
+ * - Segmentación de imágenes (renderizar tiles en vez de imagen completa)
+ * - DRM si el caso de negocio lo justifica
+ */
+
 interface DocumentViewerProps {
   isOpen: boolean;
   documentId: string | null;
@@ -151,14 +184,30 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
             </div>
           ) : (
             <div className="p-6">
-              {/* Page Image */}
-              <div className="bg-cream2/30 rounded-2xl mb-6 min-h-[400px] flex items-center justify-center">
+              {/* Page Image - Protected Container */}
+              <div 
+                className="bg-cream2/30 rounded-2xl mb-6 min-h-[400px] flex items-center justify-center relative protected-content"
+                onContextMenu={(e) => e.preventDefault()} // Bloquea clic derecho
+                onDragStart={(e) => e.preventDefault()} // Bloquea arrastrar
+              >
                 {pageUrls[currentPage] ? (
-                  <img 
-                    src={pageUrls[currentPage]} 
-                    alt={`Page ${currentPage + 1}`}
-                    className="max-w-full h-auto rounded-xl"
-                  />
+                  <>
+                    {/* Imagen protegida */}
+                    <img 
+                      src={pageUrls[currentPage]} 
+                      alt={`Page ${currentPage + 1}`}
+                      className="max-w-full h-auto rounded-xl"
+                      draggable={false} // Bloquea arrastrar imagen
+                      onContextMenu={(e) => e.preventDefault()} // Doble seguro: bloquea clic derecho en img
+                    />
+                    {/* Capa overlay transparente - protección adicional */}
+                    <div 
+                      className="protection-overlay"
+                      onContextMenu={(e) => e.preventDefault()}
+                      onDragStart={(e) => e.preventDefault()}
+                      aria-hidden="true"
+                    />
+                  </>
                 ) : (
                   <div className="text-center py-20">
                     <div className="text-5xl mb-4">📄</div>
