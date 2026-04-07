@@ -1,15 +1,13 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Mail, Lock, User, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
 import { login, register } from '@/lib/auth';
 
 type Tab = 'login' | 'register';
 
 export default function AuthForm() {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<Tab>('login');
 
   const [termsChecked, setTermsChecked] = useState(false);
@@ -58,8 +56,9 @@ export default function AuthForm() {
     setTimeout(() => setToast({ show: false, icon: '', message: '' }), 3500);
   };
 
-  const handleLogin = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async () => {
+    console.log('🔵 HANDLE LOGIN CALLED');
+    
     let valid = true;
     const errors = { email: '', password: '' };
 
@@ -83,22 +82,30 @@ export default function AuthForm() {
       setLoading(false);
       
       if (response.success) {
+        console.log('✅ LOGIN SUCCESS - User:', response.user);
+        console.log('✅ LOGIN SUCCESS - Role:', response.user?.role);
+        
+        const destination = response.user?.role === 'admin' ? '/admin' : '/dashboard';
+        console.log('🎯 REDIRECT TO:', destination);
+        
         showToast('✅', response.message || 'Signed in successfully!');
-        // Redirigir al dashboard después de un momento
+        
+        // Esperar a que Supabase guarde la sesión en cookies antes de navegar
         setTimeout(() => {
-          router.push('/dashboard');
-        }, 1000);
+          console.log('🚀 NAVIGATING TO:', destination);
+          window.location.href = destination;
+        }, 1500);
       } else {
         showToast('❌', response.message || 'Login failed');
       }
-    } catch {
+    } catch (error) {
+      console.error('❌ LOGIN ERROR:', error);
       setLoading(false);
       showToast('❌', 'An error occurred');
     }
   };
 
-  const handleRegister = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleRegister = async () => {
     let valid = true;
     const errors = { name: '', email: '', password: '', terms: '' };
 
@@ -135,10 +142,14 @@ export default function AuthForm() {
       
       if (response.success) {
         showToast('🎉', response.message || 'Account created successfully!');
-        // Redirigir al dashboard después de un momento
+        
+        // Redirigir según el rol del usuario desde la respuesta del registro
+        const destination = response.user?.role === 'admin' ? '/admin' : '/dashboard';
+        
+        // Navegar después del toast
         setTimeout(() => {
-          router.push('/dashboard');
-        }, 1000);
+          window.location.href = destination;
+        }, 100);
       } else {
         showToast('❌', response.message || 'Registration failed');
       }
@@ -211,7 +222,7 @@ export default function AuthForm() {
                   <p className="text-sm text-inkm">Sign in to continue your stories</p>
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-5">
+                <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
                   {/* Email */}
                   <div>
                     <label htmlFor="loginEmail" className="block text-sm font-semibold text-ink mb-2.5">
@@ -224,6 +235,12 @@ export default function AuthForm() {
                         id="loginEmail"
                         value={loginForm.email}
                         onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleLogin();
+                          }
+                        }}
                         onBlur={() => {
                           if (loginForm.email && !isEmail(loginForm.email)) {
                             setLoginErrors({ ...loginErrors, email: 'Invalid email' });
@@ -266,6 +283,12 @@ export default function AuthForm() {
                         id="loginPassword"
                         value={loginForm.password}
                         onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleLogin();
+                          }
+                        }}
                         className={`w-full py-3 pl-10.5 pr-10.5 border-2 rounded-[14px] text-[.95rem] text-ink bg-white outline-none transition-all duration-200 font-body placeholder:text-inkl ${
                           loginErrors.password 
                             ? 'border-[#EF4444] shadow-[0_0_0_4px_rgba(239,68,68,.08)]'
@@ -291,7 +314,8 @@ export default function AuthForm() {
 
                   {/* Submit Button */}
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={handleLogin}
                     disabled={loading}
                     className="w-full bg-orange hover:bg-oranged text-white font-semibold py-3.5 rounded-[14px] shadow-[0_4px_0_#E05520] hover:shadow-[0_2px_0_#E05520] hover:translate-y-0.5 transition-all duration-150 relative overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
                   >
@@ -320,7 +344,7 @@ export default function AuthForm() {
                   <p className="text-sm text-inkm">Join thousands of happy readers</p>
                 </div>
 
-                <form onSubmit={handleRegister} className="space-y-5">
+                <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
                   {/* Name */}
                   <div>
                     <label htmlFor="regName" className="block text-sm font-semibold text-ink mb-2.5">
@@ -496,7 +520,8 @@ export default function AuthForm() {
 
                   {/* Submit Button */}
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={handleRegister}
                     disabled={loading}
                     className="w-full bg-orange hover:bg-oranged text-white font-semibold py-3.5 rounded-[14px] shadow-[0_4px_0_#E05520] hover:shadow-[0_2px_0_#E05520] hover:translate-y-0.5 transition-all duration-150 relative overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed mt-6"
                   >

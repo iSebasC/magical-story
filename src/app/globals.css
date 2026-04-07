@@ -11,14 +11,14 @@
 /* ═══════════════════════════
    THEME CONFIGURATION
 ═══════════════════════════ */
-@theme inline {
+@theme {
   /* Colores */
   --color-cream: #FFFDF7;
   --color-cream2: #FFF3E0;
   --color-cream3: #FFE4C4;
   --color-orange: #FF6B35;
   --color-oranged: #E05520;
-  --color-teal: #00BCD4;
+  --color-teal: #00BCD4;  
   --color-teald: #0097A7;
   --color-plum: #7E57C2;
   --color-sun: #FFD54F;
@@ -27,6 +27,8 @@
   --color-inkm: #7A90B0;
   --color-inkl: #B0C0D4;
   --color-navy: #1F3872;
+  --color-sidebar: #1A2540;
+  --color-mint: #4CAF8A;
 
   /* Z-index */
   --z-500: 500;
