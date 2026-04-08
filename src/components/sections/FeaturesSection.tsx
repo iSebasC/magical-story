@@ -57,7 +57,7 @@ export default function FeaturesSection() {
           {/* bc-1 span 5 */}
           <div className="reveal delay-3 lg:col-span-5 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
             <div className="w-12 h-12 rounded-xl bg-orange/10 flex items-center justify-center text-2xl mb-4">📖</div>
-            <h3 className="font-display text-lg font-semibold mb-2">Page-by-page reading</h3>
+            <h3 className="font-display text-lg font-medium tracking-wide mb-2">Page-by-page reading</h3>
             <p className="text-sm text-inkm leading-relaxed">
               Each story works like a real book — children turn pages, follow illustrations, and get absorbed in the world at their own pace.
             </p>
@@ -67,7 +67,7 @@ export default function FeaturesSection() {
           <div className="reveal delay-4 lg:col-span-7 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all grid md:grid-cols-2 gap-6 items-center">
             <div>
               <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center text-2xl mb-4">📊</div>
-              <h3 className="font-display text-lg font-semibold mb-2">Live classroom dashboard</h3>
+              <h3 className="font-display text-lg font-medium tracking-wide mb-2">Live classroom dashboard</h3>
               <p className="text-sm text-inkm leading-relaxed">
                 See who's reading, how far they've gone, and who needs encouragement — without interrupting the class.
               </p>
@@ -107,7 +107,7 @@ export default function FeaturesSection() {
           {/* bc-3 span 4 */}
           <div className="reveal delay-5 lg:col-span-4 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
             <div className="w-12 h-12 rounded-xl bg-plum/10 flex items-center justify-center text-2xl mb-4">🎙️</div>
-            <h3 className="font-display text-lg font-semibold mb-2">Professional audio narration</h3>
+            <h3 className="font-display text-lg font-medium tracking-wide mb-2">Professional audio narration</h3>
             <p className="text-sm text-inkm leading-relaxed">
               Expressive voice acting on every page. Perfect for early readers or quiet listening time.
             </p>
@@ -116,7 +116,7 @@ export default function FeaturesSection() {
           {/* bc-4 span 4 */}
           <div className="reveal delay-6 lg:col-span-4 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
             <div className="w-12 h-12 rounded-xl bg-sun/30 flex items-center justify-center text-2xl mb-4">🎯</div>
-            <h3 className="font-display text-lg font-semibold mb-2">Story of the day</h3>
+            <h3 className="font-display text-lg font-medium tracking-wide mb-2">Story of the day</h3>
             <p className="text-sm text-inkm leading-relaxed">
               Schedule the class story for the whole week in one click. Students see it automatically.
             </p>
@@ -125,7 +125,7 @@ export default function FeaturesSection() {
           {/* bc-5 span 4 */}
           <div className="reveal delay-7 lg:col-span-4 bg-white rounded-2xl p-7 border-[1.5px] border-cream2 hover:shadow-lg hover:-translate-y-1 hover:border-cream3 transition-all">
             <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-2xl mb-4">🛡️</div>
-            <h3 className="font-display text-lg font-semibold mb-2">Safe for children</h3>
+            <h3 className="font-display text-lg font-medium tracking-wide mb-2">Safe for children</h3>
             <p className="text-sm text-inkm leading-relaxed">
               No ads, no social features, no external links. A closed, safe environment for learning.
             </p>

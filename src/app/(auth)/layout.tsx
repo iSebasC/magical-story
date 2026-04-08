@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function AuthLayout({
   children,
 }: {
@@ -35,12 +37,15 @@ export default function AuthLayout({
 
         {/* Logo */}
         <div className="relative z-10 flex items-center gap-2.5">
-          <div className="w-10 h-10 bg-white/20 backdrop-blur-sm border border-white/25 rounded-xl flex items-center justify-center text-xl">
-            📖
-          </div>
-          <span className="font-display text-xl font-bold text-white">
-            Magical <span className="text-sun">Story</span>
-          </span>
+          <Image 
+            src="/images/logo-light.png" 
+            alt="Magical Story Logo" 
+            width={200} 
+            height={60}
+            quality={100}
+            priority
+            className="h-12 w-auto object-contain"
+          />
         </div>
 
         {/* Ilustración central */}

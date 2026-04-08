@@ -40,7 +40,7 @@ export default function ProfilePage() {
   return (
     <div className="p-6 lg:p-8">
       <div className="mb-6">
-        <h2 className="font-display text-xl font-bold text-ink mb-0.5">Profile & Settings</h2>
+        <h2 className="font-display text-lg text-ink mb-0.5 tracking-wide">Profile & Settings</h2>
         <p className="text-sm text-inkm">Manage your account information</p>
       </div>
 
@@ -50,7 +50,7 @@ export default function ProfilePage() {
           <div className="w-24 h-24 rounded-full bg-orange/15 flex items-center justify-center text-4xl mx-auto mb-4">
             👤
           </div>
-          <h3 className="font-display text-lg font-bold text-ink mb-1">{user.name}</h3>
+          <h3 className="font-display text-base text-ink mb-1 tracking-wide">{user.name}</h3>
           <p className="text-xs text-inkm mb-3">{user.email}</p>
           <span
             className={`inline-block text-[10px] font-bold px-2.5 py-1 rounded-full ${
@@ -67,7 +67,7 @@ export default function ProfilePage() {
         <div className="space-y-4">
           {/* Account Info */}
           <div className="bg-white rounded-2xl p-5 border border-cream2">
-            <h4 className="font-display text-sm font-bold text-ink mb-3">Account Information</h4>
+            <h4 className="font-display text-sm text-ink mb-3 tracking-wide">Account Information</h4>
             <div className="space-y-3">
               <div>
                 <div className="text-[10px] font-bold uppercase tracking-wider text-inkm mb-1">

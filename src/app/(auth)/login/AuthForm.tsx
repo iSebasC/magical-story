@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, Lock, User, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
 import { login, register } from '@/lib/auth';
 
@@ -174,12 +175,15 @@ export default function AuthForm() {
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 lg:px-10">
         {/* Mobile logo */}
         <div className="flex lg:hidden items-center gap-2.5 mb-8 self-start">
-          <div className="w-9 h-9 bg-orange rounded-xl flex items-center justify-center text-xl shadow-[0_3px_0_#E05520]">
-            📖
-          </div>
-          <span className="font-display text-xl font-bold text-ink">
-            Magical <span className="text-orange">Story</span>
-          </span>
+          <Image 
+            src="/images/logo-light.png" 
+            alt="Magical Story Logo" 
+            width={180} 
+            height={54}
+            quality={100}
+            priority
+            className="h-9 w-auto object-contain"
+          />
         </div>
 
         <div className="w-full max-w-105">

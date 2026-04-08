@@ -95,7 +95,7 @@ export default function LibraryPage() {
   return (
     <div className="p-6 lg:p-8">
       <div className="mb-5">
-        <h2 className="font-display text-xl font-bold text-ink mb-0.5">Story Library</h2>
+        <h2 className="font-display text-lg text-ink mb-0.5 tracking-wide">Story Library</h2>
         <p className="text-sm text-inkm">Explore all available stories</p>
       </div>
 
@@ -155,7 +155,7 @@ export default function LibraryPage() {
                 </div>
 
                 {/* Badge in top corner */}
-                <div className={`absolute top-2 right-2 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full ${
+                <div className={`absolute top-2 right-2 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider rounded-full ${
                   isPremiumDoc ? 'bg-orange text-white' : 'bg-teal text-white'
                 }`}>
                   {isPremiumDoc ? 'Premium' : 'Free'}
@@ -163,7 +163,7 @@ export default function LibraryPage() {
 
                 {/* Content */}
                 <div className="bg-white p-3.5">
-                  <h3 className="font-display text-sm font-bold text-ink mb-1 leading-snug line-clamp-2">
+                  <h3 className="font-display text-xs text-ink mb-1 leading-snug line-clamp-2 tracking-wide">
                     {doc.title}
                   </h3>
                   <p className="text-[10px] text-inkm mb-2.5">

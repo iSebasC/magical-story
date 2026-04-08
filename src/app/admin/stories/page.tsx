@@ -143,12 +143,12 @@ export default function StoriesPage() {
     <div className="p-5 lg:p-7">
       <div className="flex items-start justify-between gap-4 mb-5 flex-wrap">
         <div>
-          <h2 className="font-display text-xl font-bold text-ink">Stories</h2>
+          <h2 className="font-display text-lg text-ink tracking-wide">Stories</h2>
           <p className="text-sm text-inkm">Upload PDFs and manage your story library</p>
         </div>
         <button 
           onClick={scrollToUpload}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-orange hover:bg-oranged shadow-[0_4px_12px_rgba(255,107,53,.35)] hover:-translate-y-0.5 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white bg-orange hover:bg-oranged shadow-[0_4px_12px_rgba(255,107,53,.35)] hover:-translate-y-0.5 transition-all"
         >
           📤 Upload new story
         </button>
@@ -176,9 +176,9 @@ export default function StoriesPage() {
             onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileSelect(e.target.files)}
           />
           <div className="text-5xl mb-3">📄</div>
-          <div className="font-display font-semibold text-ink mb-1.5">Drop your PDF story here</div>
+          <div className="font-display font-medium text-ink mb-1.5 tracking-wide">Drop your PDF story here</div>
           <div className="text-sm text-inkm mb-4">Drag & drop a PDF, or click to browse. The system will split it into pages automatically.</div>
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-inks border-2 border-cream3 bg-white hover:border-cream3 transition-all">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-inks border-2 border-cream3 bg-white hover:border-cream3 transition-all">
             📂 Choose PDF file
           </div>
           <div className="text-xs text-inkl mt-3">Supported: PDF · Max size: 50 MB</div>
@@ -189,8 +189,8 @@ export default function StoriesPage() {
       {showProgress && (
         <div className="bg-white rounded-2xl border border-cream2 p-5 mb-4">
           <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-semibold text-inks">📄 <span>{uploadFilename}</span></div>
-            <div className="text-sm font-bold text-orange">{Math.round(uploadProgress)}%</div>
+            <div className="text-sm font-medium text-inks">📄 <span>{uploadFilename}</span></div>
+            <div className="text-sm font-medium text-orange">{Math.round(uploadProgress)}%</div>
           </div>
           <div className="h-2 bg-cream2 rounded-full overflow-hidden mb-2">
             <div 
@@ -205,12 +205,12 @@ export default function StoriesPage() {
       {/* Story meta form */}
       {showForm && (
         <div className="bg-white rounded-2xl border border-cream2 p-6 mb-5">
-          <div className="font-display font-semibold text-ink mb-4">
+          <div className="font-display font-medium text-ink mb-4 tracking-wide">
             📝 Story details — <span className="text-orange">{uploadFilename}</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">Story title *</label>
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Story title *</label>
               <input 
                 type="text" 
                 value={formTitle}
@@ -220,7 +220,7 @@ export default function StoriesPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">Cover emoji</label>
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Cover emoji</label>
               <input 
                 type="text" 
                 value={formEmoji}
@@ -231,7 +231,7 @@ export default function StoriesPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">Age range</label>
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Age range</label>
               <select className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange outline-none transition-all">
                 <option>3 – 5 years</option>
                 <option>4 – 6 years</option>
@@ -242,7 +242,7 @@ export default function StoriesPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">Access</label>
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Access</label>
               <select 
                 value={formAccess}
                 onChange={(e) => setFormAccess(e.target.value as 'free' | 'premium')}
@@ -253,7 +253,7 @@ export default function StoriesPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">Category</label>
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Category</label>
               <select 
                 value={formCategory}
                 onChange={(e) => setFormCategory(e.target.value)}
@@ -267,7 +267,7 @@ export default function StoriesPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">Reading time</label>
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Reading time</label>
               <input 
                 type="text" 
                 placeholder="e.g. 4 min" 
@@ -276,7 +276,7 @@ export default function StoriesPage() {
             </div>
           </div>
           <div className="mb-4">
-            <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">Description</label>
+            <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Description</label>
             <textarea 
               rows={3} 
               placeholder="A short description of the story…" 
@@ -286,19 +286,19 @@ export default function StoriesPage() {
           <div className="flex flex-wrap gap-2.5">
             <button 
               onClick={publishStory}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_4px_12px_rgba(255,107,53,.35)]"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_4px_12px_rgba(255,107,53,.35)]"
             >
               ✅ Publish story
             </button>
             <button 
               onClick={saveDraft}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-inks border-2 border-cream2 hover:border-cream3 bg-white hover:-translate-y-0.5 transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-inks border-2 border-cream2 hover:border-cream3 bg-white hover:-translate-y-0.5 transition-all"
             >
               💾 Save draft
             </button>
             <button 
               onClick={cancelForm}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-inkm hover:text-ink transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-inkm hover:text-ink transition-all"
             >
               ✕ Cancel
             </button>
@@ -309,7 +309,7 @@ export default function StoriesPage() {
       {/* Stories table */}
       <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-cream2 flex-wrap gap-3">
-          <span className="font-display font-semibold text-ink">
+          <span className="font-display font-medium text-ink tracking-wide">
             All stories (<span>{filteredStories.length}</span>)
           </span>
           <div className="flex items-center gap-2 flex-wrap">
@@ -340,11 +340,11 @@ export default function StoriesPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-cream2 bg-cream text-left">
-                <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-inkm">Story</th>
-                <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-inkm">Access</th>
-                <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-inkm hidden sm:table-cell">Category</th>
-                <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-inkm hidden md:table-cell">Reads</th>
-                <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-inkm">Actions</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm">Story</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm">Access</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm hidden sm:table-cell">Category</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm hidden md:table-cell">Reads</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-cream2">
@@ -356,13 +356,13 @@ export default function StoriesPage() {
                         {story.emoji}
                       </div>
                       <div>
-                        <div className="font-semibold text-ink">{story.title}</div>
+                        <div className="font-medium text-ink">{story.title}</div>
                         <div className="text-xs text-inkm">{story.pages} pages</div>
                       </div>
                     </div>
                   </td>
                   <td className="px-5 py-4">
-                    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border ${
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${
                       story.access === 'premium'
                         ? 'bg-orange/12 text-oranged border-orange/20'
                         : 'bg-mint/10 text-green-700 border-mint/30'

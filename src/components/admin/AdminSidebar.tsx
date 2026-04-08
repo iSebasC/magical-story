@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface NavItem {
   id: string;
@@ -39,17 +40,15 @@ export function AdminSidebar() {
     >
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/8">
-        <div className="w-8 h-8 bg-orange rounded-lg flex items-center justify-center text-base shadow-[0_3px_0_#E05520]">
-          📖
-        </div>
-        <div>
-          <div className="font-display text-sm font-bold text-white leading-none">
-            Magical <span className="text-orange">Story</span>
-          </div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-white/35 mt-0.5">
-            Admin Panel
-          </div>
-        </div>
+        <Image 
+          src="/images/admin_1.png" 
+          alt="Magical Story Admin Logo" 
+          width={180} 
+          height={54}
+          quality={100}
+          priority
+          className="h-8 w-auto object-contain"
+        />
       </div>
 
       {/* Nav */}

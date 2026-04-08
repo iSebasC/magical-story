@@ -35,7 +35,7 @@ export default function SettingsPage() {
   return (
     <div className="p-5 lg:p-7">
       <div className="mb-5">
-        <h2 className="font-display text-xl font-bold text-ink">Settings</h2>
+        <h2 className="font-display text-lg text-ink tracking-wide">Settings</h2>
         <p className="text-sm text-inkm">Platform configuration</p>
       </div>
 
@@ -43,11 +43,11 @@ export default function SettingsPage() {
         {/* Free plan limits */}
         <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
           <div className="px-6 py-4 border-b border-cream2">
-            <span className="font-display font-semibold text-ink">Free plan limits</span>
+            <span className="font-display font-medium text-ink tracking-wide">Free plan limits</span>
           </div>
           <div className="p-6 flex flex-col gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">
                 Free stories available to users
               </label>
               <select
@@ -65,7 +65,7 @@ export default function SettingsPage() {
             </p>
             <button
               onClick={() => saveSetting('freeLimit')}
-              className="self-start flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_3px_10px_rgba(255,107,53,.3)]"
+              className="self-start flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_3px_10px_rgba(255,107,53,.3)]"
             >
               Save changes
             </button>
@@ -75,12 +75,12 @@ export default function SettingsPage() {
         {/* Premium pricing */}
         <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
           <div className="px-6 py-4 border-b border-cream2">
-            <span className="font-display font-semibold text-ink">Premium pricing</span>
+            <span className="font-display font-medium text-ink tracking-wide">Premium pricing</span>
           </div>
           <div className="p-6 flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">
+                <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">
                   Monthly price ($)
                 </label>
                 <input
@@ -93,7 +93,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">
+                <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">
                   Currency
                 </label>
                 <select
@@ -109,7 +109,7 @@ export default function SettingsPage() {
             </div>
             <button
               onClick={() => saveSetting('price')}
-              className="self-start flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_3px_10px_rgba(255,107,53,.3)]"
+              className="self-start flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_3px_10px_rgba(255,107,53,.3)]"
             >
               Save changes
             </button>
@@ -119,11 +119,11 @@ export default function SettingsPage() {
         {/* Admin account */}
         <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
           <div className="px-6 py-4 border-b border-cream2">
-            <span className="font-display font-semibold text-ink">Admin account</span>
+            <span className="font-display font-medium text-ink tracking-wide">Admin account</span>
           </div>
           <div className="p-6 flex flex-col gap-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">
                 Admin email
               </label>
               <input
@@ -134,7 +134,7 @@ export default function SettingsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">
                 New password
               </label>
               <input
@@ -148,13 +148,13 @@ export default function SettingsPage() {
             <div className="flex flex-wrap gap-2.5">
               <button
                 onClick={() => saveSetting('account')}
-                className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_3px_10px_rgba(255,107,53,.3)]"
+                className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_3px_10px_rgba(255,107,53,.3)]"
               >
                 Save changes
               </button>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold text-inkm border-2 border-cream2 hover:border-red-300 hover:text-red-500 hover:bg-red-50 transition-all"
+                className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-inkm border-2 border-cream2 hover:border-red-300 hover:text-red-500 hover:bg-red-50 transition-all"
               >
                 Sign out
               </button>

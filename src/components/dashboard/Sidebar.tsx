@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { logout } from '@/lib/auth';
 import { PlanType } from '@/types/stories';
@@ -75,12 +76,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       >
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-5 py-5 border-b border-blue-100/60">
-          <div className="w-8 h-8 bg-orange rounded-lg flex items-center justify-center text-lg shadow-[0_3px_0_#E05520]">
-            📖
-          </div>
-          <span className="font-display text-base font-bold text-ink">
-            Magical <span className="text-orange">Story</span>
-          </span>
+          <Image 
+            src="/images/logo-userpanel.png" 
+            alt="Magical Story Logo" 
+            width={180} 
+            height={54}
+            quality={100}
+            priority
+            className="h-8 w-auto object-contain"
+          />
         </div>
 
         {/* Nav */}

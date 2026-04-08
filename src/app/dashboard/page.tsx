@@ -71,7 +71,7 @@ export default function DashboardPage() {
         <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/10 pointer-events-none" />
         <div className="absolute -bottom-8 left-1/4 w-32 h-32 rounded-full bg-white/8 pointer-events-none" />
         <div className="relative z-10">
-          <h1 className="font-display text-2xl lg:text-3xl font-bold text-white mb-1">
+          <h1 className="font-display text-xl lg:text-2xl text-white mb-1 tracking-wide">
             Welcome back, <em className="font-normal">{firstName}!</em>
           </h1>
           <p className="text-white/80 text-sm">Ready to continue your adventure?</p>
@@ -153,7 +153,7 @@ export default function DashboardPage() {
 
       {/* Featured stories */}
       <div className="mb-4">
-        <h2 className="font-display text-lg font-bold text-ink mb-0.5">Featured stories</h2>
+        <h2 className="font-display text-base text-ink mb-0.5 tracking-wide">Featured stories</h2>
         <p className="text-xs text-inkm">Hand-picked for you</p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -192,7 +192,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Badge in top corner */}
-              <div className={`absolute top-2 right-2 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full ${
+              <div className={`absolute top-2 right-2 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider rounded-full ${
                 isPremiumDoc ? 'bg-orange text-white' : 'bg-teal text-white'
               }`}>
                 {isPremiumDoc ? 'Premium' : 'Free'}
@@ -200,7 +200,7 @@ export default function DashboardPage() {
 
               {/* Content */}
               <div className="bg-white p-3.5">
-                <h3 className="font-display text-sm font-bold text-ink mb-1 leading-snug line-clamp-2">
+                <h3 className="font-display text-xs text-ink mb-1 leading-snug line-clamp-2 tracking-wide">
                   {doc.title}
                 </h3>
                 <p className="text-[10px] text-inkm mb-2.5">

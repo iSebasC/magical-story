@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-import { Fraunces, DM_Sans } from "next/font/google";
+import { Luckiest_Guy, Quicksand } from "next/font/google";
 import "./globals.css";
 
-const fraunces = Fraunces({
+const luckiestGuy = Luckiest_Guy({
   variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "600", "700", "800"],
-  style: ["normal", "italic"],
+  weight: ["400"],
 });
 
-const dmSans = DM_Sans({
+const quicksand = Quicksand({
   variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
@@ -23,6 +22,10 @@ export const metadata: Metadata = {
     "An interactive reading platform that makes kids fall in love with stories again. Hundreds of illustrated tales, progress tracking, and rewards that spark joy.",
   keywords:
     "reading platform, educational technology, children's books, interactive stories, literacy",
+  icons: {
+    icon: '/images/icon.png',
+    apple: '/images/icon.png',
+  },
 };
 
 export default function RootLayout({
@@ -33,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${dmSans.variable} h-full antialiased`}
+      className={`${luckiestGuy.variable} ${quicksand.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">{children}</body>

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { useNavbarScroll } from '@/hooks/useNavbarScroll';
 import { useMobileDrawer } from '@/hooks/useMobileDrawer';
 import { MobileDrawer } from './MobileDrawer';
@@ -39,12 +40,15 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center justify-between gap-4">
             {/* Logo */}
             <a href="/" className="flex items-center gap-2.5 flex-shrink-0">
-              <div className="w-9 h-9 bg-orange rounded-xl flex items-center justify-center text-xl shadow-[0_3px_0_#E05520]">
-                📖
-              </div>
-              <span className="font-display text-xl font-bold text-ink">
-                Magical <span className="text-orange">Story</span>
-              </span>
+              <Image 
+                src="/images/logo_ms_magical.png" 
+                alt="Magical Story Logo" 
+                width={180} 
+                height={54}
+                quality={100}
+                priority
+                className="h-8 w-auto object-contain"
+              />
             </a>
 
             {/* Links desktop */}

@@ -66,7 +66,7 @@ export const HowItWorksSection: React.FC = () => {
               01
             </div>
             <div className="text-2xl mb-2">✉️</div>
-            <h3 className="font-display font-semibold text-ink mb-1.5">
+            <h3 className="font-display font-medium tracking-wide text-ink mb-1.5">
               Create your account
             </h3>
             <p className="text-sm text-inkm leading-relaxed">
@@ -80,7 +80,7 @@ export const HowItWorksSection: React.FC = () => {
               02
             </div>
             <div className="text-2xl mb-2">📚</div>
-            <h3 className="font-display font-semibold text-ink mb-1.5">
+            <h3 className="font-display font-medium tracking-wide text-ink mb-1.5">
               Browse the library
             </h3>
             <p className="text-sm text-inkm leading-relaxed">
@@ -94,7 +94,7 @@ export const HowItWorksSection: React.FC = () => {
               03
             </div>
             <div className="text-2xl mb-2">🎧</div>
-            <h3 className="font-display font-semibold text-ink mb-1.5">
+            <h3 className="font-display font-medium tracking-wide text-ink mb-1.5">
               Read &amp; listen
             </h3>
             <p className="text-sm text-inkm leading-relaxed">
@@ -108,7 +108,7 @@ export const HowItWorksSection: React.FC = () => {
               04
             </div>
             <div className="text-2xl mb-2">📊</div>
-            <h3 className="font-display font-semibold text-ink mb-1.5">
+            <h3 className="font-display font-medium tracking-wide text-ink mb-1.5">
               Track progress
             </h3>
             <p className="text-sm text-inkm leading-relaxed">

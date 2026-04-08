@@ -119,19 +119,19 @@ export default function UsersPage() {
   return (
     <div className="p-5 lg:p-7">
       <div className="mb-5">
-        <h2 className="font-display text-xl font-bold text-ink">Users</h2>
+        <h2 className="font-display text-lg text-ink tracking-wide">Users</h2>
         <p className="text-sm text-inkm">View and manage registered users</p>
       </div>
 
       {/* Create User Form */}
       {showCreateForm && (
         <div className="bg-white rounded-2xl border border-cream2 p-6 mb-4">
-          <div className="font-display font-semibold text-ink mb-4">
+          <div className="font-display font-medium text-ink mb-4 tracking-wide">
             ➕ Create new user
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">
                 Full name
               </label>
               <input
@@ -155,7 +155,7 @@ export default function UsersPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">
                 Password
               </label>
               <input
@@ -167,7 +167,7 @@ export default function UsersPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-inkm mb-1.5">
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">
                 Plan
               </label>
               <select
@@ -183,13 +183,13 @@ export default function UsersPage() {
           <div className="flex flex-wrap gap-2.5">
             <button
               onClick={createUser}
-              className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_3px_10px_rgba(255,107,53,.3)]"
+              className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_3px_10px_rgba(255,107,53,.3)]"
             >
               ✅ Create user
             </button>
             <button
               onClick={cancelCreateUser}
-              className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold text-inkm border-2 border-cream2 hover:border-cream3 hover:bg-cream transition-all"
+              className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-inkm border-2 border-cream2 hover:border-cream3 hover:bg-cream transition-all"
             >
               ✕ Cancel
             </button>
@@ -200,7 +200,7 @@ export default function UsersPage() {
       <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
         {/* Header with search and filters */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-cream2 flex-wrap gap-3">
-          <span className="font-display font-semibold text-ink">
+          <span className="font-display font-medium text-ink tracking-wide">
             All users (<span>{filteredUsers.length}</span>)
           </span>
           <div className="flex items-center gap-2 flex-wrap">
@@ -237,11 +237,11 @@ export default function UsersPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-cream2 bg-cream text-left">
-                <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-inkm">User</th>
-                <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-inkm">Plan</th>
-                <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-inkm hidden sm:table-cell">Stories read</th>
-                <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-inkm hidden md:table-cell">Joined</th>
-                <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-inkm">Actions</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm">User</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm">Plan</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm hidden sm:table-cell">Stories read</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm hidden md:table-cell">Joined</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-cream2">
@@ -256,7 +256,7 @@ export default function UsersPage() {
                   <tr key={user.id} className="hover:bg-[#F8F5F0] transition-colors">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-orange/12 flex items-center justify-center text-sm font-bold text-oranged shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-orange/12 flex items-center justify-center text-sm font-medium text-oranged shrink-0">
                           {user.name[0]}
                         </div>
                         <div>
@@ -268,7 +268,7 @@ export default function UsersPage() {
                     <td className="px-5 py-3.5">
                       <button
                         onClick={() => toggleUserPlan(user.id)}
-                        className={`text-[10px] font-bold px-2.5 py-1 rounded-full border transition-all ${
+                        className={`text-[10px] font-medium px-2.5 py-1 rounded-full border transition-all ${
                           user.plan === 'premium'
                             ? 'bg-orange/12 text-oranged border-orange/20 hover:bg-red-50 hover:text-red-500 hover:border-red-200'
                             : 'bg-cream text-inkm border-cream2 hover:bg-mint/10 hover:text-green-700 hover:border-mint/40'
@@ -284,7 +284,7 @@ export default function UsersPage() {
                       {user.joined}
                     </td>
                     <td className="px-5 py-3.5">
-                      <button className="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-inks bg-cream border border-cream2 hover:border-cream3 hover:bg-white transition-all">
+                      <button className="px-2.5 py-1 rounded-lg text-[11px] font-medium text-inks bg-cream border border-cream2 hover:border-cream3 hover:bg-white transition-all">
                         View
                       </button>
                     </td>

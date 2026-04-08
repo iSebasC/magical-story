@@ -34,8 +34,8 @@
   --z-500: 500;
 
   /* Fuentes */
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Luckiest Guy', cursive;
+  --font-body: 'Quicksand', system-ui, sans-serif;
 
   /* Animaciones */
   --animate-blink: blink 2s ease-in-out infinite;

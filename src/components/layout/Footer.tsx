@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 /**
  * Footer completo con links, redes sociales y copyright
@@ -11,12 +12,14 @@ export const Footer: React.FC = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center text-xl">
-                📖
-              </div>
-              <span className="font-display text-lg font-bold text-white">
-                Magical Story
-              </span>
+              <Image 
+                src="/images/logo_ms.png" 
+                alt="Magical Story Logo" 
+                width={200} 
+                height={60}
+                quality={100}
+                className="h-10 w-auto object-contain brightness-0 invert"
+              />
             </div>
             <p className="text-sm text-white/80 leading-relaxed mb-5 max-w-[220px]">
               Every page opens a new world. Join thousands of students and teachers
