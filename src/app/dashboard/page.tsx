@@ -76,7 +76,8 @@ export default function DashboardPage() {
           </h1>
           <p className="text-white/80 text-sm">Ready to continue your adventure?</p>
         </div>
-        {documents.length > 0 && (
+        {/* Continue reading button - OCULTO */}
+        {/* {documents.length > 0 && (
           <div className="relative z-10 flex gap-2.5 flex-wrap">
             <button 
               onClick={() => handleDocumentClick(documents[0])}
@@ -85,11 +86,11 @@ export default function DashboardPage() {
               📖 Continue reading
             </button>
           </div>
-        )}
+        )} */}
       </div>
 
-      {/* Quick stats */}
-      <div className="grid grid-cols-3 gap-3.5 mb-7">
+      {/* Quick stats - OCULTO */}
+      {/* <div className="grid grid-cols-3 gap-3.5 mb-7">
         <div className="bg-white rounded-xl p-4 border border-cream2 flex items-center gap-3 hover:shadow-md hover:-translate-y-0.5 transition-all">
           <span className="text-3xl">📚</span>
           <div>
@@ -111,10 +112,10 @@ export default function DashboardPage() {
             <div className="text-[10px] text-inkm uppercase tracking-wider font-bold">Completed</div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      {/* Continue reading */}
-      <div className="mb-2">
+      {/* Continue reading - OCULTO */}
+      {/* <div className="mb-2">
         <h2 className="font-display text-lg font-bold text-ink mb-0.5">Continue reading</h2>
         <p className="text-xs text-inkm">Pick up where you left off</p>
       </div>
@@ -148,7 +149,7 @@ export default function DashboardPage() {
             </div>
           ))}
         </div>
-      )}
+      )} */}
 
       {/* Featured stories */}
       <div className="mb-4">
