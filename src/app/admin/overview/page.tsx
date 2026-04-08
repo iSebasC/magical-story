@@ -6,7 +6,7 @@ export default function OverviewPage() {
   return (
     <div className="p-5 lg:p-7">
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-2xl p-5 border border-cream2 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
           <div className="w-11 h-11 rounded-xl bg-orange/12 flex items-center justify-center text-2xl flex-shrink-0">📚</div>
           <div>
@@ -42,57 +42,53 @@ export default function OverviewPage() {
         </div>}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
-
-        {/* Recent activity - HIDDEN */}
-        {false && <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-cream2">
-            <span className="font-display font-medium text-ink tracking-wide">Recent activity</span>
-          </div>
-          <div className="divide-y divide-cream2">
-            <div className="flex items-start gap-3.5 px-6 py-4">
-              <div className="w-9 h-9 rounded-xl bg-orange/12 flex items-center justify-center text-base flex-shrink-0">📤</div>
-              <div>
-                <div className="text-sm text-inks"><strong>"Dragon of Paper"</strong> was uploaded and published</div>
-                <div className="text-xs text-inkm mt-0.5">2 hours ago</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3.5 px-6 py-4">
-              <div className="w-9 h-9 rounded-xl bg-teal/12 flex items-center justify-center text-base flex-shrink-0">👤</div>
-              <div>
-                <div className="text-sm text-inks">New user <strong>sofia@school.edu</strong> registered</div>
-                <div className="text-xs text-inkm mt-0.5">3 hours ago</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3.5 px-6 py-4">
-              <div className="w-9 h-9 rounded-xl bg-sun/25 flex items-center justify-center text-base flex-shrink-0">⭐</div>
-              <div>
-                <div className="text-sm text-inks"><strong>marcos@gmail.com</strong> upgraded to Premium</div>
-                <div className="text-xs text-inkm mt-0.5">5 hours ago</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3.5 px-6 py-4">
-              <div className="w-9 h-9 rounded-xl bg-plum/12 flex items-center justify-center text-base flex-shrink-0">📚</div>
-              <div>
-                <div className="text-sm text-inks"><strong>"The Dreaming Turtle"</strong> reached 100 reads</div>
-                <div className="text-xs text-inkm mt-0.5">Yesterday</div>
-              </div>
-            </div>
-            <div className="flex items-start gap-3.5 px-6 py-4">
-              <div className="w-9 h-9 rounded-xl bg-teal/12 flex items-center justify-center text-base flex-shrink-0">👤</div>
-              <div>
-                <div className="text-sm text-inks">New user <strong>teacher@colegio.pe</strong> registered</div>
-                <div className="text-xs text-inkm mt-0.5">Yesterday</div>
-              </div>
+      {/* Recent activity - HIDDEN */}
+      {false && <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-cream2">
+          <span className="font-display font-medium text-ink tracking-wide">Recent activity</span>
+        </div>
+        <div className="divide-y divide-cream2">
+          <div className="flex items-start gap-3.5 px-6 py-4">
+            <div className="w-9 h-9 rounded-xl bg-orange/12 flex items-center justify-center text-base flex-shrink-0">📤</div>
+            <div>
+              <div className="text-sm text-inks"><strong>"Dragon of Paper"</strong> was uploaded and published</div>
+              <div className="text-xs text-inkm mt-0.5">2 hours ago</div>
             </div>
           </div>
-        </div>}
+          <div className="flex items-start gap-3.5 px-6 py-4">
+            <div className="w-9 h-9 rounded-xl bg-teal/12 flex items-center justify-center text-base flex-shrink-0">👤</div>
+            <div>
+              <div className="text-sm text-inks">New user <strong>sofia@school.edu</strong> registered</div>
+              <div className="text-xs text-inkm mt-0.5">3 hours ago</div>
+            </div>
+          </div>
+          <div className="flex items-start gap-3.5 px-6 py-4">
+            <div className="w-9 h-9 rounded-xl bg-sun/25 flex items-center justify-center text-base flex-shrink-0">⭐</div>
+            <div>
+              <div className="text-sm text-inks"><strong>marcos@gmail.com</strong> upgraded to Premium</div>
+              <div className="text-xs text-inkm mt-0.5">5 hours ago</div>
+            </div>
+          </div>
+          <div className="flex items-start gap-3.5 px-6 py-4">
+            <div className="w-9 h-9 rounded-xl bg-plum/12 flex items-center justify-center text-base flex-shrink-0">📚</div>
+            <div>
+              <div className="text-sm text-inks"><strong>"The Dreaming Turtle"</strong> reached 100 reads</div>
+              <div className="text-xs text-inkm mt-0.5">Yesterday</div>
+            </div>
+          </div>
+          <div className="flex items-start gap-3.5 px-6 py-4">
+            <div className="w-9 h-9 rounded-xl bg-teal/12 flex items-center justify-center text-base flex-shrink-0">👤</div>
+            <div>
+              <div className="text-sm text-inks">New user <strong>teacher@colegio.pe</strong> registered</div>
+              <div className="text-xs text-inkm mt-0.5">Yesterday</div>
+            </div>
+          </div>
+        </div>
+      </div>}
 
-        {/* Quick Actions + Top Stories */}
-        <div className="flex flex-col gap-4">
-
-          {/* Quick actions */}
-          <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
+      {/* Quick actions - CENTERED */}
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
             <div className="px-5 py-4 border-b border-cream2">
               <span className="font-display font-medium text-ink tracking-wide">Quick actions</span>
             </div>
@@ -117,9 +113,10 @@ export default function OverviewPage() {
               </Link>
             </div>
           </div>
+        </div>
 
-          {/* Top stories - HIDDEN */}
-          {false && <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
+        {/* Top stories - HIDDEN */}
+        {false && <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
             <div className="px-5 py-4 border-b border-cream2">
               <span className="font-display font-medium text-ink tracking-wide">Top stories</span>
             </div>
@@ -164,9 +161,6 @@ export default function OverviewPage() {
               </div>
             </div>
           </div>}
-
-        </div>
-      </div>
     </div>
   );
 }
