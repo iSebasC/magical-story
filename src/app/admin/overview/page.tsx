@@ -31,20 +31,21 @@ export default function OverviewPage() {
             <div className="text-[10px] text-green-500 font-medium mt-0.5">+5 this week</div>
           </div>
         </div>
-        <div className="bg-white rounded-2xl p-5 border border-cream2 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+        {/* Fourth stat card - HIDDEN */}
+        {false && <div className="bg-white rounded-2xl p-5 border border-cream2 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
           <div className="w-11 h-11 rounded-xl bg-mint/20 flex items-center justify-center text-2xl flex-shrink-0">📖</div>
           <div>
             <div className="font-display text-xl text-ink tracking-wide">1,240</div>
             <div className="text-xs text-inkm">Reads this month</div>
             <div className="text-[10px] text-green-500 font-medium mt-0.5">↑ 23% vs last month</div>
           </div>
-        </div>
+        </div>}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
 
-        {/* Recent activity */}
-        <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
+        {/* Recent activity - HIDDEN */}
+        {false && <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
           <div className="flex items-center justify-between px-6 py-4 border-b border-cream2">
             <span className="font-display font-medium text-ink tracking-wide">Recent activity</span>
           </div>
@@ -85,7 +86,7 @@ export default function OverviewPage() {
               </div>
             </div>
           </div>
-        </div>
+        </div>}
 
         {/* Quick Actions + Top Stories */}
         <div className="flex flex-col gap-4">
@@ -117,8 +118,8 @@ export default function OverviewPage() {
             </div>
           </div>
 
-          {/* Top stories */}
-          <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
+          {/* Top stories - HIDDEN */}
+          {false && <div className="bg-white rounded-2xl border border-cream2 overflow-hidden">
             <div className="px-5 py-4 border-b border-cream2">
               <span className="font-display font-medium text-ink tracking-wide">Top stories</span>
             </div>
@@ -162,7 +163,7 @@ export default function OverviewPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </div>}
 
         </div>
       </div>
