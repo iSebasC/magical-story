@@ -9,7 +9,14 @@ import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [user, setUser] = useState<{ name?: string; email: string; createdAt?: string }>({ 
+  const [user, setUser] = useState<{ 
+    name?: string; 
+    email: string; 
+    createdAt?: string;
+    accountType?: 'school' | 'parent';
+    schoolName?: string;
+    position?: string;
+  }>({ 
     name: '', 
     email: '', 
     createdAt: '' 
@@ -93,6 +100,30 @@ export default function ProfilePage() {
                   }) : 'N/A'}
                 </div>
               </div>
+              {user.accountType && (
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-inkm mb-1">
+                    Account Type
+                  </div>
+                  <div className="text-sm text-inks capitalize">{user.accountType}</div>
+                </div>
+              )}
+              {user.schoolName && (
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-inkm mb-1">
+                    School Name
+                  </div>
+                  <div className="text-sm text-inks">{user.schoolName}</div>
+                </div>
+              )}
+              {user.position && (
+                <div>
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-inkm mb-1">
+                    Position
+                  </div>
+                  <div className="text-sm text-inks">{user.position}</div>
+                </div>
+              )}
             </div>
           </div>
 

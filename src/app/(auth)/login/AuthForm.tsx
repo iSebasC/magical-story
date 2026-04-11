@@ -28,8 +28,9 @@ export default function AuthForm() {
   const [loginErrors, setLoginErrors] = useState({ email: '', password: '' });
 
   // Estados de formulario registro
-  const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '' });
-  const [registerErrors, setRegisterErrors] = useState({ name: '', email: '', password: '', terms: '' });
+  const [accountType, setAccountType] = useState<'school' | 'parent'>('school');
+  const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', schoolName: '', position: '' });
+  const [registerErrors, setRegisterErrors] = useState({ name: '', email: '', password: '', terms: '', schoolName: '', position: '' });
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, label: '', color: '', width: '' });
 
   const isEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -108,10 +109,10 @@ export default function AuthForm() {
 
   const handleRegister = async () => {
     let valid = true;
-    const errors = { name: '', email: '', password: '', terms: '' };
+    const errors = { name: '', email: '', password: '', terms: '', schoolName: '', position: '' };
 
     if (registerForm.name.length < 3) {
-      errors.name = 'Name must be at least 3 characters';
+      errors.name = accountType === 'school' ? 'Name must be at least 3 characters' : 'Full name must be at least 3 characters';
       valid = false;
     }
     if (!isEmail(registerForm.email)) {
@@ -121,6 +122,16 @@ export default function AuthForm() {
     if (registerForm.password.length < 8) {
       errors.password = 'Password must be at least 8 characters';
       valid = false;
+    }
+    if (accountType === 'school') {
+      if (registerForm.schoolName.length < 2) {
+        errors.schoolName = 'School name is required';
+        valid = false;
+      }
+      if (registerForm.position.length < 2) {
+        errors.position = 'Position is required';
+        valid = false;
+      }
     }
     if (!termsChecked) {
       errors.terms = 'You must accept the terms';
@@ -134,9 +145,12 @@ export default function AuthForm() {
     
     try {
       const response = await register(
+        accountType,
         registerForm.name,
         registerForm.email,
-        registerForm.password
+        registerForm.password,
+        accountType === 'school' ? registerForm.schoolName : undefined,
+        accountType === 'school' ? registerForm.position : undefined
       );
       
       setLoading(false);
@@ -349,39 +363,111 @@ export default function AuthForm() {
                 </div>
 
                 <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-                  {/* Name */}
-                  <div>
-                    <label htmlFor="regName" className="block text-sm font-semibold text-ink mb-2.5">
-                      Full name
+                  {/* Account Type Selection */}
+                  <div className="flex gap-4 mb-2">
+                    <label className={`flex-1 flex items-center justify-center gap-2 py-3 border-2 rounded-[14px] cursor-pointer transition-all ${accountType === 'school' ? 'border-orange bg-orange/5 text-orange' : 'border-cream2 text-inkm hover:border-orange/30'}`}>
+                      <input type="radio" name="accountType" value="school" checked={accountType === 'school'} onChange={() => setAccountType('school')} className="hidden" />
+                      <span className="font-semibold text-sm">School</span>
                     </label>
-                    <div className="relative">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-inkm" />
-                      <input
-                        type="text"
-                        id="regName"
-                        value={registerForm.name}
-                        onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
-                        onBlur={() => {
-                          if (registerForm.name && registerForm.name.length < 3) {
-                            setRegisterErrors({ ...registerErrors, name: 'At least 3 characters' });
-                          } else {
-                            setRegisterErrors({ ...registerErrors, name: '' });
-                          }
-                        }}
-                        className={`w-full py-3 pl-10.5 pr-3.5 border-2 rounded-[14px] text-[.95rem] text-ink bg-white outline-none transition-all duration-200 font-body placeholder:text-inkl ${
-                          registerErrors.name 
-                            ? 'border-[#EF4444] shadow-[0_0_0_4px_rgba(239,68,68,.08)]'
-                            : registerForm.name && !registerErrors.name
-                            ? 'border-[#4CAF8A] shadow-[0_0_0_4px_rgba(76,175,138,.08)]'
-                            : 'border-cream2 focus:border-orange focus:shadow-[0_0_0_4px_rgba(255,107,53,.10)]'
-                        }`}
-                        placeholder="John Doe"
-                      />
+                    <label className={`flex-1 flex items-center justify-center gap-2 py-3 border-2 rounded-[14px] cursor-pointer transition-all ${accountType === 'parent' ? 'border-orange bg-orange/5 text-orange' : 'border-cream2 text-inkm hover:border-orange/30'}`}>
+                      <input type="radio" name="accountType" value="parent" checked={accountType === 'parent'} onChange={() => setAccountType('parent')} className="hidden" />
+                      <span className="font-semibold text-sm">Parent</span>
+                    </label>
+                  </div>
+
+                  {/* School-specific fields */}
+                  {accountType === 'school' && (
+                    <div>
+                      <label htmlFor="regSchoolName" className="block text-sm font-semibold text-ink mb-2.5">
+                        School Name
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          id="regSchoolName"
+                          value={registerForm.schoolName}
+                          onChange={(e) => setRegisterForm({ ...registerForm, schoolName: e.target.value })}
+                          className={`w-full py-3 px-4 border-2 rounded-[14px] text-[.95rem] text-ink bg-white outline-none transition-all duration-200 font-body placeholder:text-inkl ${
+                            registerErrors.schoolName 
+                              ? 'border-[#EF4444] shadow-[0_0_0_4px_rgba(239,68,68,.08)]'
+                              : 'border-cream2 focus:border-orange focus:shadow-[0_0_0_4px_rgba(255,107,53,.10)]'
+                          }`}
+                          placeholder="Springfield Elementary"
+                        />
+                      </div>
+                      {registerErrors.schoolName && (
+                        <div className="flex items-center gap-1.5 text-xs text-[#EF4444] mt-2">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          <span>{registerErrors.schoolName}</span>
+                        </div>
+                      )}
                     </div>
-                    {registerErrors.name && (
-                      <div className="flex items-center gap-1.5 text-xs text-[#EF4444] mt-2">
-                        <AlertCircle className="w-3.5 h-3.5" />
-                        <span>{registerErrors.name}</span>
+                  )}
+
+                  <div className={accountType === 'school' ? 'flex flex-col sm:flex-row gap-5' : ''}>
+                    {/* Name */}
+                    <div className={accountType === 'school' ? 'flex-1' : ''}>
+                      <label htmlFor="regName" className="block text-sm font-semibold text-ink mb-2.5">
+                        {accountType === 'school' ? 'Your Name' : 'Full name'}
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-inkm" />
+                        <input
+                          type="text"
+                          id="regName"
+                          value={registerForm.name}
+                          onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
+                          onBlur={() => {
+                            if (registerForm.name && registerForm.name.length < 3) {
+                              setRegisterErrors({ ...registerErrors, name: 'At least 3 characters' });
+                            } else {
+                              setRegisterErrors({ ...registerErrors, name: '' });
+                            }
+                          }}
+                          className={`w-full py-3 pl-10.5 pr-3.5 border-2 rounded-[14px] text-[.95rem] text-ink bg-white outline-none transition-all duration-200 font-body placeholder:text-inkl ${
+                            registerErrors.name 
+                              ? 'border-[#EF4444] shadow-[0_0_0_4px_rgba(239,68,68,.08)]'
+                              : registerForm.name && !registerErrors.name
+                              ? 'border-[#4CAF8A] shadow-[0_0_0_4px_rgba(76,175,138,.08)]'
+                              : 'border-cream2 focus:border-orange focus:shadow-[0_0_0_4px_rgba(255,107,53,.10)]'
+                          }`}
+                          placeholder="John Doe"
+                        />
+                      </div>
+                      {registerErrors.name && (
+                        <div className="flex items-center gap-1.5 text-xs text-[#EF4444] mt-2">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          <span>{registerErrors.name}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Position (Only for School) */}
+                    {accountType === 'school' && (
+                      <div className="flex-1 mt-5 sm:mt-0">
+                        <label htmlFor="regPosition" className="block text-sm font-semibold text-ink mb-2.5">
+                          Your Position
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            id="regPosition"
+                            value={registerForm.position}
+                            onChange={(e) => setRegisterForm({ ...registerForm, position: e.target.value })}
+                            className={`w-full py-3 px-4 border-2 rounded-[14px] text-[.95rem] text-ink bg-white outline-none transition-all duration-200 font-body placeholder:text-inkl ${
+                              registerErrors.position 
+                                ? 'border-[#EF4444] shadow-[0_0_0_4px_rgba(239,68,68,.08)]'
+                                : 'border-cream2 focus:border-orange focus:shadow-[0_0_0_4px_rgba(255,107,53,.10)]'
+                            }`}
+                            placeholder="e.g. Teacher"
+                          />
+                        </div>
+                        {registerErrors.position && (
+                          <div className="flex items-center gap-1.5 text-xs text-[#EF4444] mt-2">
+                            <AlertCircle className="w-3.5 h-3.5" />
+                            <span>{registerErrors.position}</span>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>

@@ -8,6 +8,9 @@ export interface User {
   email: string;
   role?: UserRole;
   createdAt?: string;
+  accountType?: 'school' | 'parent';
+  schoolName?: string;
+  position?: string;
 }
 
 export interface AuthResponse {
@@ -19,16 +22,22 @@ export interface AuthResponse {
 
 // Registrar nuevo usuario
 export const register = async (
+  accountType: 'school' | 'parent',
   name: string,
   email: string,
-  password: string
+  password: string,
+  schoolName?: string,
+  position?: string
 ): Promise<AuthResponse> => {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
-        name: name
+        accountType,
+        name,
+        schoolName,
+        position
       }
     }
   });
@@ -95,7 +104,10 @@ export const getCurrentUser = async (): Promise<User | null> => {
     email: user.email!,
     name: user.user_metadata?.name,
     role: user.user_metadata?.role || 'user',
-    createdAt: user.created_at
+    createdAt: user.created_at,
+    accountType: user.user_metadata?.accountType,
+    schoolName: user.user_metadata?.schoolName,
+    position: user.user_metadata?.position
   };
 };
 
