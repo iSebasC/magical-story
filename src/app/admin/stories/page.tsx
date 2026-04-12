@@ -1,138 +1,298 @@
 'use client';
 
-import { useState, useRef, ChangeEvent, DragEvent } from 'react';
+import { useState, useRef, useEffect, useCallback, ChangeEvent, DragEvent } from 'react';
 
 interface Story {
-  id: number;
+  id: string;
   title: string;
-  emoji: string;
-  access: 'free' | 'premium';
-  category: string;
-  reads: number;
-  pages: number;
+  access_level: 'free' | 'premium';
+  total_pages: number;
+  bucket: string;
+  cover_image: string | null;
+  description: string | null;
+  created_at: string;
 }
 
-const INITIAL_STORIES: Story[] = [
-  { id: 0, title: 'The Brave Little Lion', emoji: '🦁', access: 'free', category: 'Animals', reads: 245, pages: 8 },
-  { id: 1, title: 'The Forest Fairy', emoji: '🧚', access: 'free', category: 'Magic', reads: 198, pages: 10 },
-  { id: 2, title: 'Dragon of Paper', emoji: '🐉', access: 'premium', category: 'Adventure', reads: 132, pages: 9 },
-  { id: 3, title: 'Journey to the Moon', emoji: '🚀', access: 'premium', category: 'Adventure', reads: 87, pages: 12 },
-  { id: 4, title: 'The Dreaming Turtle', emoji: '🐢', access: 'free', category: 'Animals', reads: 310, pages: 7 },
-  { id: 5, title: 'The Star Collector', emoji: '⭐', access: 'premium', category: 'Magic', reads: 64, pages: 11 },
-  { id: 6, title: 'Ocean of Secrets', emoji: '🐙', access: 'premium', category: 'Adventure', reads: 53, pages: 14 },
-  { id: 7, title: 'The Invisible Friend', emoji: '👻', access: 'free', category: 'Magic', reads: 176, pages: 8 },
-];
+interface FilePreview {
+  file: File;
+  url: string;
+  id: string;
+}
+
+interface ResourceFile {
+  file: File;
+  id: string;
+}
+
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_RESOURCE_SIZE = 20 * 1024 * 1024; // 20MB
+const MAX_PAGES = 100;
 
 export default function StoriesPage() {
-  const [storiesData, setStoriesData] = useState<Story[]>(INITIAL_STORIES);
-  const [filteredStories, setFilteredStories] = useState<Story[]>(INITIAL_STORIES);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadFilename, setUploadFilename] = useState('');
-  const [uploadStatus, setUploadStatus] = useState('Uploading…');
+  const [storiesData, setStoriesData] = useState<Story[]>([]);
+  const [filteredStories, setFilteredStories] = useState<Story[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   
   const [showUploadZone, setShowUploadZone] = useState(true);
-  const [showProgress, setShowProgress] = useState(false);
   const [showForm, setShowForm] = useState(false);
   
   const [formTitle, setFormTitle] = useState('');
-  const [formEmoji, setFormEmoji] = useState('');
   const [formAccess, setFormAccess] = useState<'free' | 'premium'>('free');
-  const [formCategory, setFormCategory] = useState('Animals');
+  const [formDescription, setFormDescription] = useState('');
+  const [images, setImages] = useState<FilePreview[]>([]);
+  const [coverImage, setCoverImage] = useState<FilePreview | null>(null);
+  const [resources, setResources] = useState<ResourceFile[]>([]);
+  const [uploadError, setUploadError] = useState('');
   
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const uploadTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterAccess, setFilterAccess] = useState('all');
 
-  const handleFileSelect = (files: FileList | null) => {
+  // Toast & confirm modal
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [confirmModal, setConfirmModal] = useState<{ message: string; onConfirm: () => void } | null>(null);
+  
+  const pageInputRef = useRef<HTMLInputElement>(null);
+  const addMorePagesRef = useRef<HTMLInputElement>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
+  const resourceInputRef = useRef<HTMLInputElement>(null);
+
+  const fetchStories = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/admin/stories');
+      const json = await res.json();
+      if (json.success) {
+        setStoriesData(json.data);
+        setFilteredStories(json.data);
+      }
+    } catch (error) {
+      console.error('Error loading stories:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchStories(); }, [fetchStories]);
+
+  useEffect(() => {
+    const q = searchQuery.toLowerCase();
+    const filtered = storiesData.filter(s =>
+      s.title.toLowerCase().includes(q) &&
+      (filterAccess === 'all' || s.access_level === filterAccess)
+    );
+    setFilteredStories(filtered);
+  }, [searchQuery, filterAccess, storiesData]);
+
+  useEffect(() => {
+    return () => {
+      images.forEach(img => URL.revokeObjectURL(img.url));
+      if (coverImage) URL.revokeObjectURL(coverImage.url);
+    };
+  }, [images, coverImage]);
+
+  const validateAndAddImages = (files: FileList | File[]) => {
+    setUploadError('');
+    const fileArray = Array.from(files);
+    const errors: string[] = [];
+    const validFiles: FilePreview[] = [];
+
+    for (const file of fileArray) {
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        errors.push(`"${file.name}" — only JPG, PNG or WEBP allowed`);
+        continue;
+      }
+      if (file.size > MAX_IMAGE_SIZE) {
+        errors.push(`"${file.name}" — exceeds 5MB limit`);
+        continue;
+      }
+      validFiles.push({
+        file,
+        url: URL.createObjectURL(file),
+        id: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
+      });
+    }
+
+    const totalAfter = images.length + validFiles.length;
+    if (totalAfter > MAX_PAGES) {
+      errors.push(`Maximum ${MAX_PAGES} pages. You have ${images.length}, tried to add ${validFiles.length}`);
+      validFiles.splice(MAX_PAGES - images.length);
+    }
+
+    if (errors.length > 0) setUploadError(errors.join('\n'));
+
+    if (validFiles.length > 0) {
+      setImages(prev => [...prev, ...validFiles]);
+      if (!showForm) {
+        setShowUploadZone(false);
+        setShowForm(true);
+      }
+    }
+  };
+
+  const handlePageSelect = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    validateAndAddImages(files);
+  };
+
+  const handleCoverSelect = (files: FileList | null) => {
     const file = files?.[0];
     if (!file) return;
-    
-    if (file.size > 50 * 1024 * 1024) {
-      alert('File too large. Max 50 MB.');
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      setUploadError('Cover must be JPG, PNG or WEBP');
       return;
     }
-    
-    setUploadFilename(file.name);
-    setShowUploadZone(false);
-    setShowProgress(true);
-    startUpload();
+    if (file.size > MAX_IMAGE_SIZE) {
+      setUploadError('Cover exceeds 5MB limit');
+      return;
+    }
+    if (coverImage) URL.revokeObjectURL(coverImage.url);
+    setCoverImage({
+      file,
+      url: URL.createObjectURL(file),
+      id: `cover_${Date.now()}`,
+    });
   };
 
-  const startUpload = () => {
-    let pct = 0;
-    const statuses = ['Uploading…', 'Processing PDF…', 'Splitting pages…', 'Generating thumbnails…', 'Done!'];
-    
-    uploadTimerRef.current = setInterval(() => {
-      pct += Math.random() * 18 + 4;
-      if (pct >= 100) {
-        pct = 100;
-        if (uploadTimerRef.current) clearInterval(uploadTimerRef.current);
-        setTimeout(() => {
-          setShowProgress(false);
-          setShowForm(true);
-        }, 600);
+  const handleResourceSelect = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const fileArray = Array.from(files);
+    const errors: string[] = [];
+    const valid: ResourceFile[] = [];
+
+    for (const file of fileArray) {
+      if (file.size > MAX_RESOURCE_SIZE) {
+        errors.push(`"${file.name}" — exceeds 20MB limit`);
+        continue;
       }
-      setUploadProgress(pct);
-      setUploadStatus(statuses[Math.min(Math.floor(pct / 25), statuses.length - 1)]);
-    }, 400);
-  };
-
-  const publishStory = () => {
-    const title = formTitle.trim();
-    if (!title) {
-      alert('Please enter a story title');
-      return;
+      valid.push({ file, id: `res_${Date.now()}_${Math.random().toString(36).slice(2)}` });
     }
-    
-    const newId = storiesData.length;
-    const newStory: Story = {
-      id: newId,
-      title,
-      emoji: formEmoji || '📖',
-      access: formAccess,
-      category: formCategory,
-      reads: 0,
-      pages: 8,
-    };
-    
-    const updated = [...storiesData, newStory];
-    setStoriesData(updated);
-    setFilteredStories(updated);
-    cancelForm();
-    alert(`"${title}" published!`);
+
+    if (errors.length > 0) setUploadError(errors.join('\n'));
+    if (valid.length > 0) setResources(prev => [...prev, ...valid]);
   };
 
-  const saveDraft = () => {
-    alert('Draft saved');
-    cancelForm();
+  const removeImage = (id: string) => {
+    setImages(prev => {
+      const img = prev.find(i => i.id === id);
+      if (img) URL.revokeObjectURL(img.url);
+      const updated = prev.filter(i => i.id !== id);
+      if (updated.length === 0) cancelForm();
+      return updated;
+    });
+  };
+
+  const moveImage = (index: number, direction: 'up' | 'down') => {
+    setImages(prev => {
+      const newArr = [...prev];
+      const target = direction === 'up' ? index - 1 : index + 1;
+      if (target < 0 || target >= newArr.length) return prev;
+      [newArr[index], newArr[target]] = [newArr[target], newArr[index]];
+      return newArr;
+    });
+  };
+
+  const removeResource = (id: string) => {
+    setResources(prev => prev.filter(r => r.id !== id));
+  };
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
+
+  const publishStory = async () => {
+    const title = formTitle.trim();
+    if (!title) { showToast('Ingresa un título para la historia', 'error'); return; }
+    if (images.length === 0) { showToast('Agrega al menos una imagen de página', 'error'); return; }
+
+    setIsPublishing(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('access_level', formAccess);
+      if (formDescription.trim()) {
+        formData.append('description', formDescription.trim());
+      }
+
+      // Cover
+      if (coverImage) {
+        formData.append('cover', coverImage.file);
+      }
+
+      // Pages in order
+      for (const img of images) {
+        formData.append('images', img.file);
+      }
+
+      // Resources
+      for (const res of resources) {
+        formData.append('resources', res.file);
+      }
+
+      const res = await fetch('/api/admin/stories', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const json = await res.json();
+
+      if (!json.success) {
+        showToast(json.error, 'error');
+        return;
+      }
+
+      cancelForm();
+      await fetchStories();
+      showToast(`"${title}" publicada con ${json.data.total_pages} páginas`, 'success');
+    } catch (error) {
+      console.error('Error publishing story:', error);
+      showToast('Error al publicar la historia. Intenta de nuevo.', 'error');
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   const cancelForm = () => {
+    images.forEach(img => URL.revokeObjectURL(img.url));
+    if (coverImage) URL.revokeObjectURL(coverImage.url);
     setShowForm(false);
-    setShowProgress(false);
     setShowUploadZone(true);
     setFormTitle('');
-    setFormEmoji('');
-    setUploadProgress(0);
-    setUploadFilename('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    setFormAccess('free');
+    setFormDescription('');
+    setImages([]);
+    setCoverImage(null);
+    setResources([]);
+    setUploadError('');
+    if (pageInputRef.current) pageInputRef.current.value = '';
+    if (coverInputRef.current) coverInputRef.current.value = '';
+    if (resourceInputRef.current) resourceInputRef.current.value = '';
   };
 
-  const filterStories = (search: string, access: string) => {
-    const q = search.toLowerCase();
-    const filtered = storiesData.filter(s =>
-      (s.title.toLowerCase().includes(q) || s.category.toLowerCase().includes(q)) &&
-      (access === 'all' || s.access === access)
-    );
-    setFilteredStories(filtered);
-  };
-
-  const deleteStory = (id: number, title: string) => {
-    if (confirm(`Delete "${title}"?`)) {
-      const updated = storiesData.filter(s => s.id !== id);
-      setStoriesData(updated);
-      setFilteredStories(updated);
-    }
+  const deleteStory = async (id: string, title: string) => {
+    setConfirmModal({
+      message: `¿Eliminar "${title}"? Esta acción no se puede deshacer.`,
+      onConfirm: async () => {
+        setConfirmModal(null);
+        try {
+          const res = await fetch(`/api/admin/stories/${id}`, { method: 'DELETE' });
+          const json = await res.json();
+          if (json.success) {
+            await fetchStories();
+            showToast(`"${title}" eliminada correctamente`, 'success');
+          } else {
+            showToast(json.error, 'error');
+          }
+        } catch (error) {
+          console.error('Error deleting story:', error);
+          showToast('Error al eliminar la historia', 'error');
+        }
+      },
+    });
   };
 
   const scrollToUpload = () => {
@@ -144,7 +304,7 @@ export default function StoriesPage() {
       <div className="flex items-start justify-between gap-4 mb-5 flex-wrap">
         <div>
           <h2 className="font-display text-lg text-ink tracking-wide">Stories</h2>
-          <p className="text-sm text-inkm">Upload PDFs and manage your story library</p>
+          <p className="text-sm text-inkm">Upload page images and manage your story library</p>
         </div>
         <button 
           onClick={scrollToUpload}
@@ -159,145 +319,231 @@ export default function StoriesPage() {
         <div 
           id="uploadZone"
           className={`border-2 border-dashed border-cream3 bg-cream rounded-2xl p-10 text-center cursor-pointer hover:border-orange hover:bg-orange/4 transition-all mb-4 relative ${isDragging ? 'border-orange bg-orange/6' : ''}`}
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => pageInputRef.current?.click()}
           onDragOver={(e: DragEvent) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={(e: DragEvent) => { 
             e.preventDefault(); 
             setIsDragging(false); 
-            handleFileSelect(e.dataTransfer.files);
+            handlePageSelect(e.dataTransfer.files);
           }}
         >
           <input 
-            ref={fileInputRef}
+            ref={pageInputRef}
             type="file" 
-            accept=".pdf" 
+            accept="image/jpeg,image/png,image/webp"
+            multiple
             className="hidden" 
-            onChange={(e: ChangeEvent<HTMLInputElement>) => handleFileSelect(e.target.files)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handlePageSelect(e.target.files)}
           />
-          <div className="text-5xl mb-3">📄</div>
-          <div className="font-display font-medium text-ink mb-1.5 tracking-wide">Drop your PDF story here</div>
-          <div className="text-sm text-inkm mb-4">Drag & drop a PDF, or click to browse. The system will split it into pages automatically.</div>
+          <div className="text-5xl mb-3">🖼️</div>
+          <div className="font-display font-medium text-ink mb-1.5 tracking-wide">Drop your story page images here</div>
+          <div className="text-sm text-inkm mb-4">Drag & drop images (one per page), or click to browse. Upload them in the correct page order.</div>
           <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-inks border-2 border-cream3 bg-white hover:border-cream3 transition-all">
-            📂 Choose PDF file
+            📂 Choose images
           </div>
-          <div className="text-xs text-inkl mt-3">Supported: PDF · Max size: 50 MB</div>
+          <div className="text-xs text-inkl mt-3">Supported: JPG, PNG, WEBP · Max 5 MB per image · Max 100 pages</div>
         </div>
       )}
 
-      {/* Upload progress */}
-      {showProgress && (
-        <div className="bg-white rounded-2xl border border-cream2 p-5 mb-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-sm font-medium text-inks">📄 <span>{uploadFilename}</span></div>
-            <div className="text-sm font-medium text-orange">{Math.round(uploadProgress)}%</div>
-          </div>
-          <div className="h-2 bg-cream2 rounded-full overflow-hidden mb-2">
-            <div 
-              className="h-full bg-orange rounded-full transition-all" 
-              style={{ width: `${uploadProgress}%` }}
-            />
-          </div>
-          <div className="text-xs text-inkm">{uploadStatus}</div>
-        </div>
-      )}
-
-      {/* Story meta form */}
+      {/* Story form */}
       {showForm && (
         <div className="bg-white rounded-2xl border border-cream2 p-6 mb-5">
           <div className="font-display font-medium text-ink mb-4 tracking-wide">
-            📝 Story details — <span className="text-orange">{uploadFilename}</span>
+            📝 New Story — <span className="text-orange">{images.length} page{images.length !== 1 ? 's' : ''}</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Story title *</label>
-              <input 
-                type="text" 
-                value={formTitle}
-                onChange={(e) => setFormTitle(e.target.value)}
-                placeholder="e.g. The Brave Little Lion" 
-                className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange focus:bg-white outline-none transition-all"
-              />
+
+          {uploadError && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4 text-sm text-red-700 whitespace-pre-line">
+              ⚠️ {uploadError}
             </div>
-            <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Cover emoji</label>
-              <input 
-                type="text" 
-                value={formEmoji}
-                onChange={(e) => setFormEmoji(e.target.value)}
-                placeholder="🦁" 
-                maxLength={2} 
-                className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange focus:bg-white outline-none transition-all"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Age range</label>
-              <select className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange outline-none transition-all">
-                <option>3 – 5 years</option>
-                <option>4 – 6 years</option>
-                <option selected>5 – 7 years</option>
-                <option>6 – 8 years</option>
-                <option>7 – 9 years</option>
-                <option>8 – 12 years</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Access</label>
-              <select 
-                value={formAccess}
-                onChange={(e) => setFormAccess(e.target.value as 'free' | 'premium')}
-                className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange outline-none transition-all"
+          )}
+
+          {/* Cover + Title + Access row */}
+          <div className="flex flex-col sm:flex-row gap-5 mb-5">
+            {/* Cover image */}
+            <div className="shrink-0">
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Cover image *</label>
+              <div 
+                className="w-32 h-44 rounded-xl border-2 border-dashed border-cream3 bg-cream flex flex-col items-center justify-center cursor-pointer hover:border-orange transition-all overflow-hidden relative"
+                onClick={() => coverInputRef.current?.click()}
               >
-                <option value="free">🟢 Free</option>
-                <option value="premium">🔒 Premium</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Category</label>
-              <select 
-                value={formCategory}
-                onChange={(e) => setFormCategory(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange outline-none transition-all"
-              >
-                <option>Animals</option>
-                <option>Adventure</option>
-                <option>Magic</option>
-                <option>Family</option>
-                <option>Nature</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Reading time</label>
+                {coverImage ? (
+                  <>
+                    <img src={coverImage.url} alt="Cover" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); if (coverImage) URL.revokeObjectURL(coverImage.url); setCoverImage(null); }}
+                      className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center hover:bg-red-600"
+                    >
+                      ✕
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-2xl mb-1">📷</span>
+                    <span className="text-[10px] text-inkm text-center px-2">Click to upload cover</span>
+                  </>
+                )}
+              </div>
               <input 
-                type="text" 
-                placeholder="e.g. 4 min" 
-                className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange focus:bg-white outline-none transition-all"
+                ref={coverInputRef}
+                type="file" 
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden" 
+                onChange={(e: ChangeEvent<HTMLInputElement>) => { handleCoverSelect(e.target.files); e.target.value = ''; }}
               />
             </div>
+
+            {/* Title, Access, Description */}
+            <div className="flex-1 space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Story title *</label>
+                  <input 
+                    type="text" 
+                    value={formTitle}
+                    onChange={(e) => setFormTitle(e.target.value)}
+                    placeholder="e.g. Andy The Angry Ape" 
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange focus:bg-white outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Access</label>
+                  <select 
+                    value={formAccess}
+                    onChange={(e) => setFormAccess(e.target.value as 'free' | 'premium')}
+                    className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange outline-none transition-all"
+                  >
+                    <option value="free">🟢 Free</option>
+                    <option value="premium">🔒 Premium</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Description / Summary</label>
+                <textarea 
+                  value={formDescription}
+                  onChange={(e) => setFormDescription(e.target.value)}
+                  rows={3} 
+                  placeholder="A fun and exciting story about anger, self-control, friendship…" 
+                  className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange focus:bg-white outline-none transition-all resize-none"
+                />
+              </div>
+            </div>
           </div>
-          <div className="mb-4">
-            <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Description</label>
-            <textarea 
-              rows={3} 
-              placeholder="A short description of the story…" 
-              className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange focus:bg-white outline-none transition-all resize-none"
-            />
+
+          {/* Page images grid */}
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm">📖 Pages ({images.length})</label>
+              <button
+                type="button"
+                onClick={() => addMorePagesRef.current?.click()}
+                className="text-xs font-medium text-orange hover:text-oranged transition-colors"
+              >
+                + Add more pages
+              </button>
+              <input 
+                ref={addMorePagesRef}
+                type="file" 
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                className="hidden" 
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  handlePageSelect(e.target.files);
+                  e.target.value = '';
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+              {images.map((img, index) => (
+                <div key={img.id} className="relative group">
+                  <div className="aspect-[3/4] rounded-xl overflow-hidden border-2 border-cream2 bg-cream">
+                    <img src={img.url} alt={`Page ${index + 1}`} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded-md font-medium">
+                    {index + 1}
+                  </div>
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center gap-1">
+                    {index > 0 && (
+                      <button type="button" onClick={() => moveImage(index, 'up')} className="w-6 h-6 rounded-full bg-white/90 text-ink text-xs flex items-center justify-center hover:bg-white" title="Move left">←</button>
+                    )}
+                    <button type="button" onClick={() => removeImage(img.id)} className="w-6 h-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center hover:bg-red-600" title="Remove">✕</button>
+                    {index < images.length - 1 && (
+                      <button type="button" onClick={() => moveImage(index, 'down')} className="w-6 h-6 rounded-full bg-white/90 text-ink text-xs flex items-center justify-center hover:bg-white" title="Move right">→</button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Resources section */}
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm">📎 Downloadable Resources (optional)</label>
+              <button
+                type="button"
+                onClick={() => resourceInputRef.current?.click()}
+                className="text-xs font-medium text-orange hover:text-oranged transition-colors"
+              >
+                + Add files
+              </button>
+              <input 
+                ref={resourceInputRef}
+                type="file" 
+                accept=".pdf,.png,.jpg,.jpeg,.webp"
+                multiple
+                className="hidden" 
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  handleResourceSelect(e.target.files);
+                  e.target.value = '';
+                }}
+              />
+            </div>
+            {resources.length === 0 ? (
+              <div 
+                className="border-2 border-dashed border-cream3 bg-cream rounded-xl p-4 text-center cursor-pointer hover:border-orange transition-all"
+                onClick={() => resourceInputRef.current?.click()}
+              >
+                <span className="text-sm text-inkm">Drop PDFs or images here — coloring pages, activities, etc.</span>
+                <div className="text-xs text-inkl mt-1">Max 20 MB per file</div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {resources.map((res) => (
+                  <div key={res.id} className="flex items-center gap-3 bg-cream rounded-xl px-4 py-2.5 border border-cream2">
+                    <span className="text-lg">📄</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-ink truncate">{res.file.name}</div>
+                      <div className="text-xs text-inkm">{(res.file.size / 1024).toFixed(0)} KB</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeResource(res.id)}
+                      className="text-red-500 hover:text-red-600 text-sm font-medium"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
           <div className="flex flex-wrap gap-2.5">
             <button 
               onClick={publishStory}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_4px_12px_rgba(255,107,53,.35)]"
+              disabled={isPublishing}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_4px_12px_rgba(255,107,53,.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             >
-              ✅ Publish story
-            </button>
-            <button 
-              onClick={saveDraft}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-inks border-2 border-cream2 hover:border-cream3 bg-white hover:-translate-y-0.5 transition-all"
-            >
-              💾 Save draft
+              {isPublishing ? '⏳ Uploading…' : `✅ Publish story (${images.length} pages)`}
             </button>
             <button 
               onClick={cancelForm}
+              disabled={isPublishing}
               className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-inkm hover:text-ink transition-all"
             >
               ✕ Cancel
@@ -318,16 +564,14 @@ export default function StoriesPage() {
               <input 
                 type="text" 
                 placeholder="Search stories…" 
-                onChange={(e) => filterStories(e.target.value, (document.getElementById('storyFilterAccess') as HTMLSelectElement)?.value || 'all')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-8 pr-4 py-2 rounded-xl border border-cream2 text-sm text-ink bg-cream focus:border-orange outline-none transition-all w-44"
               />
             </div>
             <select 
-              id="storyFilterAccess"
-              onChange={(e) => {
-                const search = (document.querySelector('input[placeholder="Search stories…"]') as HTMLInputElement)?.value || '';
-                filterStories(search, e.target.value);
-              }}
+              value={filterAccess}
+              onChange={(e) => setFilterAccess(e.target.value)}
               className="px-3 py-2 rounded-xl border border-cream2 text-sm text-ink bg-cream focus:border-orange outline-none transition-all"
             >
               <option value="all">All access</option>
@@ -336,14 +580,18 @@ export default function StoriesPage() {
             </select>
           </div>
         </div>
+
+        {loading ? (
+          <div className="p-10 text-center text-inkm">Loading stories…</div>
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-cream2 bg-cream text-left">
                 <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm">Story</th>
                 <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm">Access</th>
-                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm hidden sm:table-cell">Category</th>
-                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm hidden md:table-cell">Reads</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm hidden sm:table-cell">Pages</th>
+                <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm hidden md:table-cell">Created</th>
                 <th className="px-5 py-3 text-xs font-medium uppercase tracking-wider text-inkm">Actions</th>
               </tr>
             </thead>
@@ -352,37 +600,41 @@ export default function StoriesPage() {
                 <tr key={story.id} className="hover:bg-[#F8F5F0] transition-colors">
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-orange/12 flex items-center justify-center text-lg shrink-0">
-                        {story.emoji}
-                      </div>
-                      <div>
+                      {story.cover_image ? (
+                        <div className="w-10 h-14 rounded-lg overflow-hidden border border-cream2 shrink-0">
+                          <img src={story.cover_image} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-14 rounded-lg bg-orange/12 flex items-center justify-center text-lg shrink-0">
+                          📄
+                        </div>
+                      )}
+                      <div className="min-w-0">
                         <div className="font-medium text-ink">{story.title}</div>
-                        <div className="text-xs text-inkm">{story.pages} pages</div>
+                        {story.description && (
+                          <div className="text-xs text-inkm truncate max-w-[200px]">{story.description}</div>
+                        )}
+                        <div className="text-xs text-inkl">{story.total_pages} pages</div>
                       </div>
                     </div>
                   </td>
                   <td className="px-5 py-4">
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${
-                      story.access === 'premium'
+                      story.access_level === 'premium'
                         ? 'bg-orange/12 text-oranged border-orange/20'
                         : 'bg-mint/10 text-green-700 border-mint/30'
                     }`}>
-                      {story.access === 'premium' ? '🔒 Premium' : '🟢 Free'}
+                      {story.access_level === 'premium' ? '🔒 Premium' : '🟢 Free'}
                     </span>
                   </td>
                   <td className="px-5 py-4 hidden sm:table-cell">
-                    <span className="text-inks">{story.category}</span>
+                    <span className="text-inks">{story.total_pages}</span>
                   </td>
                   <td className="px-5 py-4 hidden md:table-cell">
-                    <span className="font-semibold text-ink">{story.reads}</span>
+                    <span className="text-inks">{new Date(story.created_at).toLocaleDateString()}</span>
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-2">
-                      <button 
-                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-inks bg-cream hover:bg-cream2 transition-colors"
-                      >
-                        ✏️ Edit
-                      </button>
                       <button 
                         onClick={() => deleteStory(story.id, story.title)}
                         className="px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
@@ -393,10 +645,59 @@ export default function StoriesPage() {
                   </td>
                 </tr>
               ))}
+              {filteredStories.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-5 py-10 text-center text-inkm">
+                    {storiesData.length === 0 ? 'No stories yet. Upload your first story images!' : 'No stories match your search.'}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
+        )}
       </div>
+
+      {/* Toast notification */}
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-50 animate-[slideUp_0.3s_ease-out]">
+          <div className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-lg border text-sm font-medium ${
+            toast.type === 'success'
+              ? 'bg-green-50 border-green-200 text-green-800'
+              : 'bg-red-50 border-red-200 text-red-800'
+          }`}>
+            <span className="text-lg">{toast.type === 'success' ? '✅' : '❌'}</span>
+            <span>{toast.message}</span>
+            <button onClick={() => setToast(null)} className="ml-2 text-xs opacity-60 hover:opacity-100">✕</button>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm modal */}
+      {confirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl border border-cream2 p-6 max-w-sm w-full mx-4 animate-[scaleIn_0.2s_ease-out]">
+            <div className="text-center mb-5">
+              <div className="text-4xl mb-3">⚠️</div>
+              <p className="text-sm text-ink leading-relaxed">{confirmModal.message}</p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmModal(null)}
+                className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-inkm border-2 border-cream2 hover:bg-cream transition-all"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmModal.onConfirm}
+                className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white bg-red-500 hover:bg-red-600 transition-all"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
