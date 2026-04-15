@@ -1,8 +1,44 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function OverviewPage() {
+  const [storiesCount, setStoriesCount] = useState(0);
+  const [usersCount, setUsersCount] = useState(0);
+  const [premiumCount, setPremiumCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoading(true);
+        const [storiesRes, usersRes] = await Promise.all([
+          fetch('/api/admin/stories'),
+          fetch('/api/admin/users')
+        ]);
+        
+        const storiesJson = await storiesRes.json();
+        const usersJson = await usersRes.json();
+
+        if (storiesJson.success && storiesJson.data) {
+          setStoriesCount(storiesJson.data.length);
+        }
+
+        if (usersJson.success && usersJson.users) {
+          setUsersCount(usersJson.users.length);
+          setPremiumCount(usersJson.users.filter((u: any) => u.plan === 'premium').length);
+        }
+      } catch (error) {
+        console.error('Error fetching admin stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <div className="p-5 lg:p-7">
       {/* Stats */}
@@ -10,7 +46,7 @@ export default function OverviewPage() {
         <div className="bg-white rounded-2xl p-5 border border-cream2 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
           <div className="w-11 h-11 rounded-xl bg-orange/12 flex items-center justify-center text-2xl flex-shrink-0">📚</div>
           <div>
-            <div className="font-display text-xl text-ink tracking-wide">8</div>
+            <div className="font-display text-xl text-ink tracking-wide">{loading ? '...' : storiesCount}</div>
             <div className="text-xs text-inkm">Total stories</div>
             <div className="text-[10px] text-green-500 font-medium mt-0.5">+2 this month</div>
           </div>
@@ -18,7 +54,7 @@ export default function OverviewPage() {
         <div className="bg-white rounded-2xl p-5 border border-cream2 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
           <div className="w-11 h-11 rounded-xl bg-teal/12 flex items-center justify-center text-2xl flex-shrink-0">👥</div>
           <div>
-            <div className="font-display text-xl text-ink tracking-wide">124</div>
+            <div className="font-display text-xl text-ink tracking-wide">{loading ? '...' : usersCount}</div>
             <div className="text-xs text-inkm">Registered users</div>
             <div className="text-[10px] text-green-500 font-medium mt-0.5">+18 this week</div>
           </div>
@@ -26,7 +62,7 @@ export default function OverviewPage() {
         <div className="bg-white rounded-2xl p-5 border border-cream2 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
           <div className="w-11 h-11 rounded-xl bg-plum/12 flex items-center justify-center text-2xl flex-shrink-0">⭐</div>
           <div>
-            <div className="font-display text-xl text-ink tracking-wide">34</div>
+            <div className="font-display text-xl text-ink tracking-wide">{loading ? '...' : premiumCount}</div>
             <div className="text-xs text-inkm">Premium users</div>
             <div className="text-[10px] text-green-500 font-medium mt-0.5">+5 this week</div>
           </div>

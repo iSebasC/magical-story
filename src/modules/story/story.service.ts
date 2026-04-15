@@ -164,6 +164,91 @@ class StoryService {
     return await storyRepository.update(id, dto);
   }
 
+  async updateStoryWithFiles(
+    id: string,
+    title: string,
+    accessLevel: 'free' | 'premium',
+    description?: string,
+    newCover?: UploadedFile,
+    newImages?: UploadedFile[],
+  ): Promise<Document> {
+    const existing = await storyRepository.findById(id);
+    if (!existing) {
+      throw new Error('Story not found');
+    }
+
+    let coverUrl = existing.cover_image;
+    // 1. Reemplazar cover si hay nuevo
+    if (newCover) {
+      const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowedImageTypes.includes(newCover.contentType)) {
+        throw new Error('Cover image must be JPG, PNG or WEBP');
+      }
+      if (newCover.buffer.length > 5 * 1024 * 1024) {
+        throw new Error('Cover image exceeds 5MB limit');
+      }
+
+      const coverPath = await storyRepository.uploadCover(newCover.buffer, newCover.fileName, newCover.contentType);
+      coverUrl = storyRepository.getPublicUrl(coverPath);
+
+      if (existing.cover_image) {
+        const oldP = this.extractStoragePath(existing.cover_image);
+        if (oldP) {
+          try { await storyRepository.deleteStorageFiles([oldP]); } catch {}
+        }
+      }
+    }
+
+    let totalPages = existing.total_pages;
+
+    // 2. Reemplazar páginas si hay nuevas
+    if (newImages && newImages.length > 0) {
+      if (newImages.length > 100) {
+        throw new Error('Maximum 100 pages per story');
+      }
+
+      const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      for (const img of newImages) {
+        if (!allowedImageTypes.includes(img.contentType)) {
+          throw new Error(`Invalid file type: ${img.contentType}`);
+        }
+        if (img.buffer.length > 5 * 1024 * 1024) throw new Error('Image exceeds 5MB limit');
+      }
+
+      const uploadedPageUrls: string[] = [];
+      for (const img of newImages) {
+        const path = await storyRepository.uploadImage(img.buffer, img.fileName, img.contentType);
+        uploadedPageUrls.push(storyRepository.getPublicUrl(path));
+      }
+
+      const existingPages = await storyRepository.findPagesByDocumentId(id);
+      const pathsToDelete = existingPages
+        .map(p => p.image_path ? this.extractStoragePath(p.image_path) : null)
+        .filter((p): p is string => p !== null);
+      if (pathsToDelete.length > 0) {
+        try { await storyRepository.deleteStorageFiles(pathsToDelete); } catch {}
+      }
+
+      await storyRepository.deletePages(id);
+
+      const newPagesToInsert = uploadedPageUrls.map((url, index) => ({
+        document_id: id,
+        page_number: index + 1,
+        image_path: url,
+      }));
+      await storyRepository.createPages(newPagesToInsert);
+      totalPages = newImages.length;
+    }
+
+    return await storyRepository.update(id, {
+      title,
+      access_level: accessLevel,
+      description: description || null,
+      cover_image: coverUrl,
+      total_pages: totalPages,
+    });
+  }
+
   /** Extrae el path de storage desde una URL pública de Supabase */
   private extractStoragePath(publicUrl: string): string | null {
     const marker = '/object/public/stories/';

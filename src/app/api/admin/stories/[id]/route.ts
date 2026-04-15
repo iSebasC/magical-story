@@ -31,19 +31,69 @@ export async function GET(
   }
 }
 
-// PUT /api/admin/stories/[id] — Actualizar story
+// PUT /api/admin/stories/[id] — Actualizar story con posibles archivos
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const body = await request.json();
 
-    const story = await storyService.updateStory(id, {
-      title: body.title,
-      access_level: body.access_level,
-    });
+    let title: string;
+    let access_level: 'free' | 'premium';
+    let description: string | undefined;
+    
+    let coverFile: File | null = null;
+    let pageImages: File[] = [];
+
+    const contentType = request.headers.get('content-type') || '';
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await request.formData();
+      title = formData.get('title') as string;
+      access_level = (formData.get('access_level') as 'free' | 'premium') || 'free';
+      description = (formData.get('description') as string) || undefined;
+      coverFile = formData.get('cover') as File | null;
+      pageImages = formData.getAll('images') as File[];
+    } else {
+      const body = await request.json();
+      title = body.title;
+      access_level = body.access_level;
+      description = body.description;
+    }
+
+    if (!title || !title.trim()) {
+      return NextResponse.json({ success: false, error: 'Title is required' }, { status: 400 });
+    }
+
+    // Convertir a buffers si hay archivos
+    let cover;
+    if (coverFile) {
+      cover = {
+        buffer: Buffer.from(await coverFile.arrayBuffer()),
+        fileName: coverFile.name,
+        contentType: coverFile.type,
+      };
+    }
+
+    let images;
+    if (pageImages && pageImages.length > 0) {
+      images = await Promise.all(
+        pageImages.map(async (file) => ({
+          buffer: Buffer.from(await file.arrayBuffer()),
+          fileName: file.name,
+          contentType: file.type,
+        }))
+      );
+    }
+
+    const story = await storyService.updateStoryWithFiles(
+      id,
+      title.trim(),
+      access_level,
+      description?.trim(),
+      cover,
+      images
+    );
 
     return NextResponse.json({
       success: true,

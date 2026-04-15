@@ -155,6 +155,16 @@ class StoryRepository {
     return true;
   }
 
+  async deletePages(documentId: string): Promise<boolean> {
+    const { error } = await supabaseAdmin
+      .from('document_pages')
+      .delete()
+      .eq('document_id', documentId);
+
+    if (error) throw error;
+    return true;
+  }
+
   // === Resources ===
 
   async createResource(dto: CreateDocumentResourceDto): Promise<DocumentResource> {

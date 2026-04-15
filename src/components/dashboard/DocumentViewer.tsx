@@ -170,6 +170,12 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
 
     let cleanPath = page.image_path || '';
     
+    // If it's already a full HTTP(S) URL, use it directly instead of creating a signed URL
+    if (cleanPath.startsWith('http://') || cleanPath.startsWith('https://')) {
+      setPageUrls(prev => ({ ...prev, [pageIndex]: cleanPath }));
+      return;
+    }
+    
     try {
       if (cleanPath.includes('/storage/v1/object/public/pdfs/') || cleanPath.includes('/storage/v1/object/pdfs/')) {
         const urlParts = cleanPath.split('/pdfs/');
@@ -181,9 +187,13 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
     if (cleanPath.startsWith('pdfs/')) cleanPath = cleanPath.substring(5);
     cleanPath = decodeURIComponent(cleanPath);
 
-    const { data } = await supabase.storage
+    const { data, error } = await supabase.storage
       .from('pdfs')
       .createSignedUrl(cleanPath, 300);
+    
+    if (error) {
+      console.error('Error creating signed URL for path:', cleanPath, error);
+    }
     
     if (data?.signedUrl) {
       setPageUrls(prev => ({ ...prev, [pageIndex]: data.signedUrl }));

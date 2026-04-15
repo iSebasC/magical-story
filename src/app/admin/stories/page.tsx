@@ -54,10 +54,27 @@ export default function StoriesPage() {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [confirmModal, setConfirmModal] = useState<{ message: string; onConfirm: () => void } | null>(null);
   
+  // Edit modal
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingStory, setEditingStory] = useState<Story | null>(null);
+  const [editStoryTitle, setEditStoryTitle] = useState('');
+  const [editStoryDescription, setEditStoryDescription] = useState('');
+  const [editStoryAccess, setEditStoryAccess] = useState<'free' | 'premium'>('free');
+  
+  // New states for editing files
+  const [editCoverImage, setEditCoverImage] = useState<FilePreview | null>(null);
+  const [editImages, setEditImages] = useState<FilePreview[]>([]);
+  const [editUploadError, setEditUploadError] = useState('');
+
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+  
   const pageInputRef = useRef<HTMLInputElement>(null);
   const addMorePagesRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
   const resourceInputRef = useRef<HTMLInputElement>(null);
+
+  const editCoverInputRef = useRef<HTMLInputElement>(null);
+  const editPageInputRef = useRef<HTMLInputElement>(null);
 
   const fetchStories = useCallback(async () => {
     try {
@@ -293,6 +310,89 @@ export default function StoriesPage() {
         }
       },
     });
+  };
+
+  const openEditModal = (story: Story) => {
+    setEditingStory(story);
+    setEditStoryTitle(story.title);
+    setEditStoryDescription(story.description || '');
+    setEditStoryAccess(story.access_level);
+    setEditCoverImage(null);
+    setEditImages([]);
+    setEditUploadError('');
+    setShowEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setEditingStory(null);
+    if (editCoverImage) URL.revokeObjectURL(editCoverImage.url);
+    editImages.forEach(img => URL.revokeObjectURL(img.url));
+  };
+
+  const saveEditedStory = async () => {
+    if (!editingStory) return;
+    const title = editStoryTitle.trim();
+    if (!title) { showToast('El título no puede estar vacío', 'error'); return; }
+
+    setIsSavingEdit(true);
+    try {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('access_level', editStoryAccess);
+      if (editStoryDescription.trim()) {
+        formData.append('description', editStoryDescription.trim());
+      }
+      if (editCoverImage) {
+        formData.append('cover', editCoverImage.file);
+      }
+      for (const img of editImages) {
+        formData.append('images', img.file);
+      }
+
+      const res = await fetch(`/api/admin/stories/${editingStory.id}`, {
+        method: 'PUT',
+        body: formData,
+      });
+      const json = await res.json();
+      
+      if (json.success) {
+        // Just reload the stories to get the latest DB URLs
+        await fetchStories();
+        showToast('Historia actualizada', 'success');
+        closeEditModal();
+      } else {
+        showToast(json.error, 'error');
+      }
+    } catch (error) {
+      console.error(error);
+      showToast('Error al editar historia', 'error');
+    } finally {
+      setIsSavingEdit(false);
+    }
+  };
+
+  const handleEditCoverSelect = (files: FileList | null) => {
+    const file = files?.[0];
+    if (!file) return;
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) { setEditUploadError('Cover must be JPG, PNG or WEBP'); return; }
+    if (file.size > MAX_IMAGE_SIZE) { setEditUploadError('Cover exceeds 5MB limit'); return; }
+    setEditUploadError('');
+    if (editCoverImage) URL.revokeObjectURL(editCoverImage.url);
+    setEditCoverImage({ file, url: URL.createObjectURL(file), id: `cover_${Date.now()}` });
+  };
+
+  const handleEditPageSelect = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setEditUploadError('');
+    const fileArray = Array.from(files);
+    const validFiles: FilePreview[] = [];
+    for (const file of fileArray) {
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) continue;
+      if (file.size > MAX_IMAGE_SIZE) continue;
+      validFiles.push({ file, url: URL.createObjectURL(file), id: `${Date.now()}_${Math.random().toString(36).slice(2)}` });
+    }
+    setEditImages(prev => [...prev, ...validFiles]);
   };
 
   const scrollToUpload = () => {
@@ -636,6 +736,12 @@ export default function StoriesPage() {
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-2">
                       <button 
+                        onClick={() => openEditModal(story)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-inks bg-cream hover:bg-cream3 hover:text-ink transition-colors"
+                      >
+                        ✏️ Edit
+                      </button>
+                      <button 
                         onClick={() => deleteStory(story.id, story.title)}
                         className="px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
                       >
@@ -669,6 +775,125 @@ export default function StoriesPage() {
             <span className="text-lg">{toast.type === 'success' ? '✅' : '❌'}</span>
             <span>{toast.message}</span>
             <button onClick={() => setToast(null)} className="ml-2 text-xs opacity-60 hover:opacity-100">✕</button>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Form Modal */}
+      {showEditModal && editingStory && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/40 backdrop-blur-sm overflow-y-auto pt-20">
+          <div className="bg-white rounded-[24px] shadow-2xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 my-auto">
+            <div className="px-6 py-4 border-b border-cream2 flex justify-between items-center bg-cream/50">
+              <h3 className="font-display font-medium text-ink">Edit Story</h3>
+              <button 
+                onClick={closeEditModal} 
+                className="text-inkm hover:text-ink w-8 h-8 flex items-center justify-center rounded-full hover:bg-cream transition-colors"
+              >✕</button>
+            </div>
+            
+            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+              {editUploadError && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4 text-sm text-red-700">
+                  ⚠️ {editUploadError}
+                </div>
+              )}
+
+              <div className="flex flex-col sm:flex-row gap-5">
+                {/* Cover target */}
+                <div className="shrink-0">
+                  <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Cover Image (optional replacement)</label>
+                  <div 
+                    className="w-32 h-44 rounded-xl border-2 border-dashed border-cream3 bg-cream flex flex-col items-center justify-center cursor-pointer hover:border-orange transition-all overflow-hidden relative"
+                    onClick={() => editCoverInputRef.current?.click()}
+                  >
+                    {editCoverImage ? (
+                      <>
+                        <img src={editCoverImage.url} alt="Cover" className="w-full h-full object-cover" />
+                        <button type="button" onClick={(e) => { e.stopPropagation(); URL.revokeObjectURL(editCoverImage.url); setEditCoverImage(null); }} className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center">✕</button>
+                      </>
+                    ) : editingStory.cover_image ? (
+                      <>
+                        <img src={editingStory.cover_image} alt="Original Cover" className="w-full h-full object-cover opacity-60" />
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity text-white text-xs text-center p-2">
+                          <span>Click to replace</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-2xl mb-1">📷</span>
+                        <span className="text-[10px] text-inkm text-center px-2">Upload cover</span>
+                      </>
+                    )}
+                  </div>
+                  <input ref={editCoverInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(e) => { handleEditCoverSelect(e.target.files); e.target.value = ''; }} />
+                </div>
+
+                <div className="flex-1 space-y-3">
+                  <div>
+                    <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Title</label>
+                    <input 
+                      type="text" 
+                      value={editStoryTitle} 
+                      onChange={(e) => setEditStoryTitle(e.target.value)} 
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-white focus:border-orange outline-none transition-colors" 
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Access Logic</label>
+                    <select 
+                      value={editStoryAccess} 
+                      onChange={(e) => setEditStoryAccess(e.target.value as 'free' | 'premium')} 
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-white focus:border-orange outline-none"
+                    >
+                      <option value="free">Free</option>
+                      <option value="premium">Premium</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Description / Summary</label>
+                    <textarea 
+                      value={editStoryDescription} 
+                      onChange={(e) => setEditStoryDescription(e.target.value)} 
+                      rows={3} 
+                      className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-white focus:border-orange outline-none transition-all resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Replace All Pages (Optional)</label>
+                <div className="text-xs text-inkm mb-2">⚠️ If you add any pages here, ALL existing pages will be replaced. Leave empty to keep existing pages.</div>
+                
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <button type="button" onClick={() => editPageInputRef.current?.click()} className="text-xs font-medium bg-cream hover:bg-cream3 px-3 py-1.5 rounded-lg border border-cream2">📁 Select New Pages</button>
+                  <input ref={editPageInputRef} type="file" multiple accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(e) => { handleEditPageSelect(e.target.files); e.target.value = ''; }} />
+                </div>
+                
+                {editImages.length > 0 && (
+                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                    {editImages.map((img, index) => (
+                      <div key={img.id} className="aspect-[3/4] relative group rounded-xl overflow-hidden border-2 border-orange bg-cream">
+                        <img src={img.url} className="w-full h-full object-cover" />
+                        <div className="absolute top-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded-md">{index + 1}</div>
+                        <button type="button" onClick={() => { URL.revokeObjectURL(img.url); setEditImages(prev => prev.filter(i => i.id !== img.id)); }} className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xl">✕</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="px-6 py-4 bg-cream/30 border-t border-cream2 flex justify-end gap-3 rounded-b-[24px]">
+              <button onClick={closeEditModal} className="px-4 py-2 rounded-xl text-sm font-medium text-ink border-2 border-transparent hover:bg-cream transition-colors">
+                Cancel
+              </button>
+              <button onClick={saveEditedStory} disabled={isSavingEdit} className="px-5 py-2 rounded-xl text-sm font-bold text-white bg-orange hover:bg-oranged transition-colors disabled:opacity-50">
+                {isSavingEdit ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
           </div>
         </div>
       )}

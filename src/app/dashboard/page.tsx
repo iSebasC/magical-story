@@ -10,6 +10,8 @@ import { PlanType } from '@/types/stories';
 interface Document {
   id: string;
   title: string;
+  description?: string | null;
+  cover_image?: string | null;
   total_pages: number;
   created_at: string;
   access_level: 'free' | 'premium';
@@ -32,7 +34,7 @@ export default function DashboardPage() {
       // 2. Obtener documentos
       const { data, error } = await supabase
         .from('documents')
-        .select('id, title, total_pages, created_at, access_level')
+        .select('id, title, description, cover_image, total_pages, created_at, access_level')
         .order('created_at', { ascending: false });
 
       if (data && !error) {
@@ -156,7 +158,7 @@ export default function DashboardPage() {
         <h2 className="font-display text-base text-ink mb-0.5 tracking-wide">Featured stories</h2>
         <p className="text-xs text-inkm">Hand-picked for you</p>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="flex flex-col gap-4">
         {documents.slice(0, 4).map((doc, index) => {
           const gradients = [
             'linear-gradient(135deg, #FFE8E0 0%, #FFF0E0 100%)',
@@ -172,51 +174,63 @@ export default function DashboardPage() {
             <div
               key={doc.id}
               onClick={() => !isLocked && handleDocumentClick(doc)}
-              className={`relative rounded-2xl overflow-hidden border-[1.5px] transition-all ${
+              className={`relative rounded-2xl overflow-hidden border-[1.5px] transition-all flex flex-row ${
                 isLocked 
                   ? 'border-cream2 cursor-not-allowed' 
                   : 'border-cream2 hover:-translate-y-1 hover:shadow-lg hover:border-cream3 cursor-pointer'
               }`}
             >
-              {/* Background area with emoji */}
+              {/* Left side: cover image */}
               <div 
-                className="h-32 flex items-center justify-center text-5xl relative"
-                style={{ background: gradients[index % gradients.length] }}
+                className="w-1/3 sm:w-48 flex-shrink-0 flex items-center justify-center text-5xl relative min-h-[140px]"
+                style={!doc.cover_image ? { background: gradients[index % gradients.length] } : undefined}
               >
-                <span className="relative z-10">{emojis[index % emojis.length]}</span>
+                {doc.cover_image ? (
+                  <img src={doc.cover_image} alt={doc.title} className="absolute inset-0 w-full h-full object-cover" />
+                ) : (
+                  <span className="relative z-10">{emojis[index % emojis.length]}</span>
+                )}
                 {isLocked && (
                   <div className="absolute inset-0 bg-ink/20 backdrop-blur-[2px] flex items-center justify-center">
                     <span className="text-4xl">🔒</span>
                   </div>
                 )}
+                {/* Badge in top corner */}
+                <div className={`absolute top-2 left-2 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider rounded-full shadow-sm ${
+                  isPremiumDoc ? 'bg-orange text-white' : 'bg-teal text-white'
+                }`}>
+                  {isPremiumDoc ? 'Premium' : 'Free'}
+                </div>
               </div>
 
-              {/* Badge in top corner */}
-              <div className={`absolute top-2 right-2 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider rounded-full ${
-                isPremiumDoc ? 'bg-orange text-white' : 'bg-teal text-white'
-              }`}>
-                {isPremiumDoc ? 'Premium' : 'Free'}
-              </div>
-
-              {/* Content */}
-              <div className="bg-white p-3.5">
-                <h3 className="font-display text-xs text-ink mb-1 leading-snug line-clamp-2 tracking-wide">
-                  {doc.title}
-                </h3>
-                <p className="text-[10px] text-inkm mb-2.5">
-                  {doc.total_pages} pages
-                </p>
+              {/* Right side: Content */}
+              <div className="bg-white p-4 sm:p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-display text-base sm:text-lg text-ink mb-1.5 leading-snug line-clamp-2 tracking-wide font-bold">
+                    {doc.title}
+                  </h3>
+                  {doc.description && (
+                    <p className="text-sm text-inkm mb-2.5 line-clamp-3">
+                      {doc.description}
+                    </p>
+                  )}
+                  <p className="text-xs sm:text-sm text-inkm mb-4 font-medium">
+                    {doc.total_pages} pages
+                  </p>
+                </div>
                 
-                {/* Button */}
-                {isLocked ? (
-                  <button className="w-full py-2 rounded-lg text-xs font-bold bg-cream2/60 text-inkm cursor-not-allowed flex items-center justify-center gap-1.5">
-                    <span>🔒</span> Premium
-                  </button>
-                ) : (
-                  <button className="w-full py-2 rounded-lg text-xs font-bold text-white bg-orange hover:bg-oranged transition-colors flex items-center justify-center gap-1.5">
-                    <span>📖</span> Read
-                  </button>
-                )}
+                {/* Options / Buttons */}
+                <div className="mt-auto flex justify-start">
+                  {isLocked ? (
+                    <button className="w-full sm:w-auto min-w-[120px] py-2 px-4 rounded-lg text-xs font-bold bg-cream2/60 text-inkm cursor-not-allowed flex items-center justify-center gap-1.5">
+                      <span>🔒</span> Premium
+                    </button>
+                  ) : (
+                    <button className="w-full sm:w-auto min-w-[120px] py-2 px-4 rounded-lg text-xs font-bold text-white bg-orange hover:bg-oranged transition-colors flex items-center justify-center gap-1.5">
+                      <span>📖</span> Read
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           );
