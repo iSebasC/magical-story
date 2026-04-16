@@ -66,6 +66,9 @@ export default function StoriesPage() {
   const [editCoverImage, setEditCoverImage] = useState<FilePreview | null>(null);
   const [editImages, setEditImages] = useState<FilePreview[]>([]);
   const [editUploadError, setEditUploadError] = useState('');
+  const [editResources, setEditResources] = useState<ResourceFile[]>([]);
+  const [editExistingResources, setEditExistingResources] = useState<{ id: string; name: string; file_path: string }[]>([]);
+  const [editDeleteResourceIds, setEditDeleteResourceIds] = useState<string[]>([]);
 
   const [isSavingEdit, setIsSavingEdit] = useState(false);
   
@@ -76,6 +79,7 @@ export default function StoriesPage() {
 
   const editCoverInputRef = useRef<HTMLInputElement>(null);
   const editPageInputRef = useRef<HTMLInputElement>(null);
+  const editResourceInputRef = useRef<HTMLInputElement>(null);
 
   const fetchStories = useCallback(async () => {
     try {
@@ -313,15 +317,30 @@ export default function StoriesPage() {
     });
   };
 
-  const openEditModal = (story: Story) => {
+  const openEditModal = async (story: Story) => {
     setEditingStory(story);
     setEditStoryTitle(story.title);
     setEditStoryDescription(story.description || '');
     setEditStoryAccess(story.access_level);
     setEditCoverImage(null);
     setEditImages([]);
+    setEditResources([]);
+    setEditDeleteResourceIds([]);
     setEditUploadError('');
     setShowEditModal(true);
+
+    // Fetch existing resources
+    try {
+      const res = await fetch(`/api/admin/stories/${story.id}`);
+      const json = await res.json();
+      if (json.success && json.data.resources) {
+        setEditExistingResources(json.data.resources.map((r: any) => ({ id: r.id, name: r.name, file_path: r.file_path })));
+      } else {
+        setEditExistingResources([]);
+      }
+    } catch {
+      setEditExistingResources([]);
+    }
   };
 
   const closeEditModal = () => {
@@ -349,6 +368,12 @@ export default function StoriesPage() {
       }
       for (const img of editImages) {
         formData.append('images', img.file);
+      }
+      for (const res of editResources) {
+        formData.append('resources', res.file);
+      }
+      if (editDeleteResourceIds.length > 0) {
+        formData.append('delete_resource_ids', JSON.stringify(editDeleteResourceIds));
       }
 
       const res = await fetch(`/api/admin/stories/${editingStory.id}`, {
@@ -394,6 +419,37 @@ export default function StoriesPage() {
       validFiles.push({ file, url: URL.createObjectURL(file), id: `${Date.now()}_${Math.random().toString(36).slice(2)}` });
     }
     setEditImages(prev => [...prev, ...validFiles]);
+  };
+
+  const handleEditResourceSelect = (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const fileArray = Array.from(files);
+    const errors: string[] = [];
+    const valid: ResourceFile[] = [];
+    const currentTotal = editExistingResources.filter(r => !editDeleteResourceIds.includes(r.id)).length + editResources.length;
+
+    for (const file of fileArray) {
+      if (file.size > MAX_RESOURCE_SIZE) {
+        errors.push(`"${file.name}" — exceeds 20MB limit`);
+        continue;
+      }
+      if (currentTotal + valid.length >= 5) {
+        errors.push('Maximum 5 resources per story');
+        break;
+      }
+      valid.push({ file, id: `eres_${Date.now()}_${Math.random().toString(36).slice(2)}` });
+    }
+
+    if (errors.length > 0) setEditUploadError(errors.join('\n'));
+    if (valid.length > 0) setEditResources(prev => [...prev, ...valid]);
+  };
+
+  const removeEditResource = (id: string) => {
+    setEditResources(prev => prev.filter(r => r.id !== id));
+  };
+
+  const markExistingResourceForDeletion = (id: string) => {
+    setEditDeleteResourceIds(prev => [...prev, id]);
   };
 
   const scrollToUpload = () => {
@@ -882,6 +938,87 @@ export default function StoriesPage() {
                         <button type="button" onClick={() => { URL.revokeObjectURL(img.url); setEditImages(prev => prev.filter(i => i.id !== img.id)); }} className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xl">✕</button>
                       </div>
                     ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Resources section */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-medium uppercase tracking-wider text-inkm flex items-center gap-1"><Paperclip className="w-3.5 h-3.5" /> Downloadable Resources</label>
+                  {(editExistingResources.filter(r => !editDeleteResourceIds.includes(r.id)).length + editResources.length) < 5 && (
+                    <button
+                      type="button"
+                      onClick={() => editResourceInputRef.current?.click()}
+                      className="text-xs font-medium text-orange hover:text-oranged transition-colors"
+                    >
+                      + Add files
+                    </button>
+                  )}
+                  <input 
+                    ref={editResourceInputRef}
+                    type="file" 
+                    accept=".pdf,.png,.jpg,.jpeg,.webp"
+                    multiple
+                    className="hidden" 
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                      handleEditResourceSelect(e.target.files);
+                      e.target.value = '';
+                    }}
+                  />
+                </div>
+
+                {/* Existing resources */}
+                {editExistingResources.filter(r => !editDeleteResourceIds.includes(r.id)).length > 0 && (
+                  <div className="space-y-2 mb-2">
+                    {editExistingResources.filter(r => !editDeleteResourceIds.includes(r.id)).map((res) => (
+                      <div key={res.id} className="flex items-center gap-3 bg-cream rounded-xl px-4 py-2.5 border border-cream2">
+                        <FileText className="w-4 h-4 text-inkm" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-ink truncate">{res.name}</div>
+                          <div className="text-xs text-inkm">Existing</div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => markExistingResourceForDeletion(res.id)}
+                          className="text-red-500 hover:text-red-600 text-sm font-medium"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* New resources to upload */}
+                {editResources.length > 0 && (
+                  <div className="space-y-2 mb-2">
+                    {editResources.map((res) => (
+                      <div key={res.id} className="flex items-center gap-3 bg-orange/5 rounded-xl px-4 py-2.5 border border-orange/20">
+                        <FileText className="w-4 h-4 text-orange" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-ink truncate">{res.file.name}</div>
+                          <div className="text-xs text-inkm">{(res.file.size / 1024).toFixed(0)} KB · New</div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeEditResource(res.id)}
+                          className="text-red-500 hover:text-red-600 text-sm font-medium"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {editExistingResources.filter(r => !editDeleteResourceIds.includes(r.id)).length === 0 && editResources.length === 0 && (
+                  <div 
+                    className="border-2 border-dashed border-cream3 bg-cream rounded-xl p-4 text-center cursor-pointer hover:border-orange transition-all"
+                    onClick={() => editResourceInputRef.current?.click()}
+                  >
+                    <span className="text-sm text-inkm">Drop PDFs or images — coloring pages, activities, etc.</span>
+                    <div className="text-xs text-inkl mt-1">Max 20 MB per file · Max 5 files</div>
                   </div>
                 )}
               </div>

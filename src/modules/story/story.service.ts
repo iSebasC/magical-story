@@ -171,6 +171,8 @@ class StoryService {
     description?: string,
     newCover?: UploadedFile,
     newImages?: UploadedFile[],
+    newResources?: UploadedResource[],
+    deleteResourceIds?: string[],
   ): Promise<Document> {
     const existing = await storyRepository.findById(id);
     if (!existing) {
@@ -238,6 +240,43 @@ class StoryService {
       }));
       await storyRepository.createPages(newPagesToInsert);
       totalPages = newImages.length;
+    }
+
+    // 3. Eliminar recursos marcados para borrar
+    if (deleteResourceIds && deleteResourceIds.length > 0) {
+      const existingResources = await storyRepository.findResourcesByDocumentId(id);
+      const toDelete = existingResources.filter(r => deleteResourceIds.includes(r.id));
+      const storagePaths = toDelete
+        .map(r => r.file_path ? this.extractStoragePath(r.file_path) : null)
+        .filter((p): p is string => p !== null);
+      if (storagePaths.length > 0) {
+        try { await storyRepository.deleteStorageFiles(storagePaths); } catch {}
+      }
+      await storyRepository.deleteResourcesByIds(deleteResourceIds);
+    }
+
+    // 4. Subir nuevos recursos
+    if (newResources && newResources.length > 0) {
+      const MAX_RESOURCE_SIZE = 20 * 1024 * 1024;
+      for (const res of newResources) {
+        if (res.buffer.length > MAX_RESOURCE_SIZE) {
+          throw new Error(`Resource "${res.displayName}" exceeds 20MB limit`);
+        }
+      }
+      const uploadedResources: { name: string; path: string; url: string }[] = [];
+      for (const res of newResources) {
+        const path = await storyRepository.uploadResource(res.buffer, res.fileName, res.contentType);
+        uploadedResources.push({ name: res.displayName, path, url: storyRepository.getPublicUrl(path) });
+      }
+      if (uploadedResources.length > 0) {
+        await storyRepository.createResources(
+          uploadedResources.map((r) => ({
+            document_id: id,
+            name: r.name,
+            file_path: r.url,
+          }))
+        );
+      }
     }
 
     return await storyRepository.update(id, {

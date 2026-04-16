@@ -2,7 +2,7 @@
 
 import { useEffect, useState, use } from 'react';
 import { supabase } from '@/lib/supabase';
-import { ChevronLeft, ChevronRight, ArrowLeft, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, Loader2, Download, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 interface Page {
@@ -12,9 +12,16 @@ interface Page {
   url?: string;
 }
 
+interface Resource {
+  id: string;
+  name: string;
+  file_path: string;
+}
+
 export default function BookReaderPage({ params }: { params: Promise<{ id: string }> }) {
   const unwrappedParams = use(params);
   const [pages, setPages] = useState<Page[]>([]);
+  const [resources, setResources] = useState<Resource[]>([]);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [currentPageUrl, setCurrentPageUrl] = useState<string | null>(null);
@@ -36,6 +43,17 @@ export default function BookReaderPage({ params }: { params: Promise<{ id: strin
 
       setPages(dbPages as Page[]);
       setLoading(false);
+
+      // Fetch resources
+      const { data: dbResources } = await supabase
+        .from('document_resources')
+        .select('*')
+        .eq('document_id', unwrappedParams.id)
+        .order('created_at', { ascending: true });
+
+      if (dbResources && dbResources.length > 0) {
+        setResources(dbResources as Resource[]);
+      }
     };
 
     fetchPages();
@@ -175,6 +193,31 @@ export default function BookReaderPage({ params }: { params: Promise<{ id: strin
           <ChevronRight className="w-6 h-6 -mr-1" />
         </button>
       </div>
+
+      {/* Downloadable Resources */}
+      {resources.length > 0 && (
+        <div className="bg-white px-6 py-5 rounded-2xl shadow-[0_4px_24px_rgba(52,78,122,.08)] border border-cream2">
+          <h3 className="text-sm font-bold text-ink uppercase tracking-wider mb-3 flex items-center gap-2">
+            <Download className="w-4 h-4 text-orange" /> Downloadable Resources
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {resources.map((res) => (
+              <a
+                key={res.id}
+                href={res.file_path}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="flex items-center gap-3 bg-cream hover:bg-cream2 rounded-xl px-4 py-3 border border-cream2 hover:border-orange/30 transition-all group"
+              >
+                <FileText className="w-5 h-5 text-orange shrink-0" />
+                <span className="text-sm font-medium text-ink truncate group-hover:text-orange transition-colors">{res.name}</span>
+                <Download className="w-4 h-4 text-inkm ml-auto shrink-0 group-hover:text-orange transition-colors" />
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

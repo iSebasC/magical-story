@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         data: story,
-        message: `Story "${story.title}" creada con ${story.total_pages} páginas`,
+        message: `Story "${story.title}" creada con ${story.total_pages} páginas${resources ? ` y ${resources.length} recurso(s)` : ''}`,
       },
       { status: 201 }
     );

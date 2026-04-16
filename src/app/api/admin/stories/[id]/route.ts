@@ -45,6 +45,8 @@ export async function PUT(
     
     let coverFile: File | null = null;
     let pageImages: File[] = [];
+    let resourceFiles: File[] = [];
+    let deleteResourceIds: string[] = [];
 
     const contentType = request.headers.get('content-type') || '';
     if (contentType.includes('multipart/form-data')) {
@@ -54,11 +56,17 @@ export async function PUT(
       description = (formData.get('description') as string) || undefined;
       coverFile = formData.get('cover') as File | null;
       pageImages = formData.getAll('images') as File[];
+      resourceFiles = formData.getAll('resources') as File[];
+      const deleteIdsRaw = formData.get('delete_resource_ids') as string | null;
+      if (deleteIdsRaw) {
+        try { deleteResourceIds = JSON.parse(deleteIdsRaw); } catch {}
+      }
     } else {
       const body = await request.json();
       title = body.title;
       access_level = body.access_level;
       description = body.description;
+      deleteResourceIds = body.delete_resource_ids || [];
     }
 
     if (!title || !title.trim()) {
@@ -86,13 +94,27 @@ export async function PUT(
       );
     }
 
+    let resources;
+    if (resourceFiles && resourceFiles.length > 0) {
+      resources = await Promise.all(
+        resourceFiles.map(async (file) => ({
+          buffer: Buffer.from(await file.arrayBuffer()),
+          fileName: file.name,
+          contentType: file.type,
+          displayName: file.name,
+        }))
+      );
+    }
+
     const story = await storyService.updateStoryWithFiles(
       id,
       title.trim(),
       access_level,
       description?.trim(),
       cover,
-      images
+      images,
+      resources,
+      deleteResourceIds.length > 0 ? deleteResourceIds : undefined,
     );
 
     return NextResponse.json({
