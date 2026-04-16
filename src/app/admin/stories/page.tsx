@@ -11,6 +11,7 @@ interface Story {
   bucket: string;
   cover_image: string | null;
   description: string | null;
+  banner_color: string | null;
   created_at: string;
 }
 
@@ -43,6 +44,7 @@ export default function StoriesPage() {
   const [formTitle, setFormTitle] = useState('');
   const [formAccess, setFormAccess] = useState<'free' | 'premium'>('free');
   const [formDescription, setFormDescription] = useState('');
+  const [formBannerColor, setFormBannerColor] = useState('#FFE8E0');
   const [images, setImages] = useState<FilePreview[]>([]);
   const [coverImage, setCoverImage] = useState<FilePreview | null>(null);
   const [resources, setResources] = useState<ResourceFile[]>([]);
@@ -61,6 +63,7 @@ export default function StoriesPage() {
   const [editStoryTitle, setEditStoryTitle] = useState('');
   const [editStoryDescription, setEditStoryDescription] = useState('');
   const [editStoryAccess, setEditStoryAccess] = useState<'free' | 'premium'>('free');
+  const [editBannerColor, setEditBannerColor] = useState('#FFE8E0');
   
   // New states for editing files
   const [editCoverImage, setEditCoverImage] = useState<FilePreview | null>(null);
@@ -236,6 +239,7 @@ export default function StoriesPage() {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('access_level', formAccess);
+      formData.append('banner_color', formBannerColor);
       if (formDescription.trim()) {
         formData.append('description', formDescription.trim());
       }
@@ -286,6 +290,7 @@ export default function StoriesPage() {
     setFormTitle('');
     setFormAccess('free');
     setFormDescription('');
+    setFormBannerColor('#FFE8E0');
     setImages([]);
     setCoverImage(null);
     setResources([]);
@@ -322,6 +327,7 @@ export default function StoriesPage() {
     setEditStoryTitle(story.title);
     setEditStoryDescription(story.description || '');
     setEditStoryAccess(story.access_level);
+    setEditBannerColor(story.banner_color || '#FFE8E0');
     setEditCoverImage(null);
     setEditImages([]);
     setEditResources([]);
@@ -360,6 +366,7 @@ export default function StoriesPage() {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('access_level', editStoryAccess);
+      formData.append('banner_color', editBannerColor);
       if (editStoryDescription.trim()) {
         formData.append('description', editStoryDescription.trim());
       }
@@ -575,6 +582,24 @@ export default function StoriesPage() {
                     <option value="free">● Free</option>
                     <option value="premium">🔒 Premium</option>
                   </select>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Banner Color</label>
+                <div className="flex items-center gap-3">
+                  <input 
+                    type="color" 
+                    value={formBannerColor}
+                    onChange={(e) => setFormBannerColor(e.target.value)}
+                    className="w-10 h-10 rounded-lg border-2 border-cream2 cursor-pointer p-0.5"
+                  />
+                  <input 
+                    type="text" 
+                    value={formBannerColor}
+                    onChange={(e) => setFormBannerColor(e.target.value)}
+                    className="w-28 px-3 py-2 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange outline-none transition-all font-mono"
+                  />
+                  <div className="h-8 flex-1 rounded-lg border border-cream2" style={{ background: formBannerColor }} />
                 </div>
               </div>
               <div>
@@ -906,6 +931,25 @@ export default function StoriesPage() {
                       <option value="free">Free</option>
                       <option value="premium">Premium</option>
                     </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Banner Color</label>
+                    <div className="flex items-center gap-3">
+                      <input 
+                        type="color" 
+                        value={editBannerColor}
+                        onChange={(e) => setEditBannerColor(e.target.value)}
+                        className="w-10 h-10 rounded-lg border-2 border-cream2 cursor-pointer p-0.5"
+                      />
+                      <input 
+                        type="text" 
+                        value={editBannerColor}
+                        onChange={(e) => setEditBannerColor(e.target.value)}
+                        className="w-28 px-3 py-2 rounded-xl border-2 border-cream2 text-sm text-ink bg-white focus:border-orange outline-none transition-all font-mono"
+                      />
+                      <div className="h-8 flex-1 rounded-lg border border-cream2" style={{ background: editBannerColor }} />
+                    </div>
                   </div>
 
                   <div>

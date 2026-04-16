@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
     const title = formData.get('title') as string | null;
     const accessLevel = (formData.get('access_level') as string) || 'free';
     const description = formData.get('description') as string | null;
+    const bannerColor = formData.get('banner_color') as string | null;
 
     // Obtener archivos
     const pageImages = formData.getAll('images') as File[];
@@ -166,7 +167,8 @@ export async function POST(request: NextRequest) {
       user.id,
       description?.trim() || undefined,
       cover,
-      resources
+      resources,
+      bannerColor?.trim() || undefined,
     );
 
     return NextResponse.json(

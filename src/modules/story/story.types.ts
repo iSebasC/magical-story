@@ -7,6 +7,7 @@ export interface Document {
   access_level: 'free' | 'premium';
   cover_image: string | null;
   description: string | null;
+  banner_color: string | null;
   created_at: string;
 }
 
@@ -35,6 +36,7 @@ export interface CreateDocumentDto {
   user_id: string;
   cover_image?: string;
   description?: string;
+  banner_color?: string;
 }
 
 export interface UpdateDocumentDto {
@@ -43,6 +45,7 @@ export interface UpdateDocumentDto {
   description?: string;
   cover_image?: string;
   total_pages?: number;
+  banner_color?: string;
 }
 
 export interface CreateDocumentPageDto {

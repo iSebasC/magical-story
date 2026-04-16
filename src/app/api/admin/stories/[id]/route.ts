@@ -42,6 +42,7 @@ export async function PUT(
     let title: string;
     let access_level: 'free' | 'premium';
     let description: string | undefined;
+    let bannerColor: string | undefined;
     
     let coverFile: File | null = null;
     let pageImages: File[] = [];
@@ -54,6 +55,7 @@ export async function PUT(
       title = formData.get('title') as string;
       access_level = (formData.get('access_level') as 'free' | 'premium') || 'free';
       description = (formData.get('description') as string) || undefined;
+      bannerColor = (formData.get('banner_color') as string) || undefined;
       coverFile = formData.get('cover') as File | null;
       pageImages = formData.getAll('images') as File[];
       resourceFiles = formData.getAll('resources') as File[];
@@ -66,6 +68,7 @@ export async function PUT(
       title = body.title;
       access_level = body.access_level;
       description = body.description;
+      bannerColor = body.banner_color;
       deleteResourceIds = body.delete_resource_ids || [];
     }
 
@@ -115,6 +118,7 @@ export async function PUT(
       images,
       resources,
       deleteResourceIds.length > 0 ? deleteResourceIds : undefined,
+      bannerColor?.trim(),
     );
 
     return NextResponse.json({

@@ -76,6 +76,7 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
   const [audioActive, setAudioActive] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const viewerRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   /**
    * Calcula los "spreads" (vistas) del libro:
@@ -114,17 +115,29 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
     if (isOpen && documentId) {
       setCurrentSpreadIndex(0);
       setAudioActive(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
       document.body.style.overflow = 'hidden';
       loadPages();
     } else {
       document.body.style.overflow = '';
       setIsFullscreen(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
     }
 
     return () => {
       document.body.style.overflow = '';
       if (document.fullscreenElement) {
         document.exitFullscreen();
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
       }
     };
   }, [isOpen, documentId]);
@@ -401,10 +414,24 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
                 )}
               </div>
 
-              {/* Audio Toggle (simulated) */}
+              {/* Audio Toggle */}
               <div className="flex items-center justify-center gap-3 mb-6">
                 <button
-                  onClick={() => setAudioActive(!audioActive)}
+                  onClick={() => {
+                    const next = !audioActive;
+                    setAudioActive(next);
+                    if (next) {
+                      if (!audioRef.current) {
+                        audioRef.current = new Audio('/audio/starostin-happy-kids-music-10-sec-327378.mp3');
+                        audioRef.current.loop = true;
+                      }
+                      audioRef.current.play();
+                    } else {
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                      }
+                    }
+                  }}
                   className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all ${
                     audioActive
                       ? 'bg-orange text-white'

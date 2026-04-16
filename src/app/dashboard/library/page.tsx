@@ -11,6 +11,7 @@ interface Document {
   title: string;
   description?: string | null;
   cover_image?: string | null;
+  banner_color?: string | null;
   total_pages: number;
   created_at: string;
   access_level: 'free' | 'premium';
@@ -46,7 +47,7 @@ export default function LibraryPage() {
       // 2. Obtener documentos
       const { data, error } = await supabase
         .from('documents')
-        .select('id, title, description, cover_image, total_pages, created_at, access_level')
+        .select('id, title, description, cover_image, banner_color, total_pages, created_at, access_level')
         .order('created_at', { ascending: false });
 
       if (data && !error) {
@@ -165,11 +166,11 @@ export default function LibraryPage() {
                     ? 'border-cream2' 
                     : 'border-cream2 hover:-translate-y-1 hover:shadow-lg hover:border-cream3'
                 }`}
+                style={{ background: doc.banner_color || gradients[index % gradients.length] }}
               >
                 {/* Cover image side */}
                 <div 
                   className="w-1/3 sm:w-48 flex-shrink-0 flex items-center justify-center text-5xl relative min-h-[140px]"
-                  style={!doc.cover_image ? { background: gradients[index % gradients.length] } : undefined}
                 >
                   {doc.cover_image ? (
                     <img src={doc.cover_image} alt={doc.title} className="absolute inset-0 w-full h-full object-cover" />
@@ -190,7 +191,7 @@ export default function LibraryPage() {
                 </div>
 
                 {/* Content side */}
-                <div className="bg-white p-4 sm:p-5 flex-1 flex flex-col justify-between">
+                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
                   <div>
                     <h3 className="font-display text-base sm:text-lg text-ink mb-1.5 leading-snug line-clamp-2 tracking-wide font-bold">
                       {doc.title}

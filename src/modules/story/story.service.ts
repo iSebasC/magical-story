@@ -37,7 +37,8 @@ class StoryService {
     userId: string,
     description?: string,
     cover?: UploadedFile,
-    resources?: UploadedResource[]
+    resources?: UploadedResource[],
+    bannerColor?: string,
   ): Promise<Document> {
     if (images.length === 0) {
       throw new Error('At least one image is required');
@@ -124,6 +125,7 @@ class StoryService {
         user_id: userId,
         cover_image: coverUrl,
         description: description || undefined,
+        banner_color: bannerColor || undefined,
       };
 
       const document = await storyRepository.create(dto);
@@ -173,6 +175,7 @@ class StoryService {
     newImages?: UploadedFile[],
     newResources?: UploadedResource[],
     deleteResourceIds?: string[],
+    bannerColor?: string,
   ): Promise<Document> {
     const existing = await storyRepository.findById(id);
     if (!existing) {
@@ -285,6 +288,7 @@ class StoryService {
       description: description || undefined,
       cover_image: coverUrl ?? undefined,
       total_pages: totalPages,
+      banner_color: bannerColor || undefined,
     });
   }
 

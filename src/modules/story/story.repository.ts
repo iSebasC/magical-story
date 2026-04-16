@@ -79,6 +79,7 @@ class StoryRepository {
         access_level: dto.access_level,
         cover_image: dto.cover_image || null,
         description: dto.description || null,
+        banner_color: dto.banner_color || null,
       })
       .select()
       .single();
