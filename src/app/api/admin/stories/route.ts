@@ -118,11 +118,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Validar recursos
-    const MAX_RESOURCE_SIZE = 20 * 1024 * 1024;
+    const MAX_RESOURCE_SIZE = 50 * 1024 * 1024;
     for (const file of resourceFiles) {
       if (file.size > MAX_RESOURCE_SIZE) {
         return NextResponse.json(
-          { success: false, error: `Recurso "${file.name}" excede el límite de 20MB` },
+          { success: false, error: `Recurso "${file.name}" excede el límite de 50MB` },
           { status: 400 }
         );
       }
