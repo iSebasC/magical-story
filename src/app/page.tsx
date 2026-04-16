@@ -2,9 +2,10 @@ import React from 'react';
 import { Navbar, Footer } from '@/components/layout';
 import {
   HeroSection,
-  TrustBar,
+  WhySELSection,
   HowItWorksSection,
-  FeaturesSection,
+  CASELFrameworkSection,
+  // FeaturesSection,
   SchoolsSection,
   // TestimonialsSection,
   PricingSection,
@@ -21,9 +22,10 @@ export default function HomePage() {
       <Navbar />
       <main className="overflow-x-hidden">
         <HeroSection />
-        <TrustBar />
+        <WhySELSection />
         <HowItWorksSection />
-        <FeaturesSection />
+        <CASELFrameworkSection />
+        {/* <FeaturesSection /> */}
         <SchoolsSection />
         {/* <TestimonialsSection /> */}
         <PricingSection />

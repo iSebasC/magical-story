@@ -42,7 +42,7 @@ export function AdminSidebar() {
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/8">
         <Image 
-          src="/images/admin_1.png" 
+          src="/images/panel-admin.png" 
           alt="Magical Story Admin Logo" 
           width={180} 
           height={54}

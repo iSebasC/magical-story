@@ -52,32 +52,25 @@ export const CTASection: React.FC = () => {
       <div className="max-w-6xl mx-auto px-7 relative z-10">
         <div className="text-5xl mb-5">📖✨</div>
         <h2 className="reveal font-display text-5xl font-bold text-ink mb-4 leading-tight">
-          Ready to open the
+          Access the first two
           <br />
           <em className="font-normal" style={{ fontStyle: 'italic', color: '#FF6B35' }}>
-            first chapter?
+            stories for free
           </em>
         </h2>
         <p className="reveal delay-1 text-base text-inkm max-w-md mx-auto mb-10 leading-relaxed">
-          Join 120+ schools that turned reading into the best part of the school day.
-          The first 30 days are completely free.
+          Start exploring our SEL storybooks today. No credit card required.
         </p>
         <div className="reveal delay-2 flex flex-wrap justify-center gap-3 mb-5">
           <a
             href="/login?tab=register"
             className="inline-flex items-center justify-center gap-1.5 px-6 py-3 text-sm font-semibold bg-orange text-white rounded-full shadow-[0_4px_0_#E05520] active:shadow-[0_2px_0_#E05520] active:translate-y-0.5 transition-all"
           >
-            Start for free →
-          </a>
-          <a
-            href="mailto:schools@magicalstory.com"
-            className="inline-flex items-center justify-center gap-1.5 px-6 py-3 text-sm font-semibold border-2 border-cream2 text-ink bg-white rounded-full hover:border-cream3 transition-colors"
-          >
-            Talk to us
+            Access the first two stories for free →
           </a>
         </div>
         <p className="reveal delay-3 text-sm text-inkl">
-          <strong className="text-orange">30 days free</strong> · No credit card · Cancel
+          <strong className="text-orange">Free access</strong> · No credit card · Cancel
           anytime
         </p>
       </div>

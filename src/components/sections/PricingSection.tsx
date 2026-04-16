@@ -48,53 +48,48 @@ export default function PricingSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-3xl mx-auto">
 
-          {/* Starter */}
+          {/* Free Access */}
           <div className="reveal delay-3 bg-white rounded-3xl p-8 border-2 border-cream2 relative hover:-translate-y-1.5 hover:shadow-xl transition-all">
-            <div className="font-display text-lg font-medium tracking-wide mb-2">🌱 Starter</div>
-            <div className="text-xs text-inkm mb-6">Explore the platform, no strings</div>
+            <div className="font-display text-lg font-medium tracking-wide mb-2">🌱 Free access</div>
+            <div className="text-xs text-inkm mb-6">Try the platform, no strings</div>
             <div className="font-display text-5xl font-medium mb-2"><sup className="text-lg align-super">$</sup>0</div>
-            <div className="text-xs text-inkm mb-7">Free forever · 1 classroom</div>
+            <div className="text-xs text-inkm mb-7">Free forever</div>
             <ul className="space-y-2.5 mb-6">
-              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>3 free stories</li>
-              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Up to 30 students</li>
-              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Audio narration</li>
-              <li className="flex items-center gap-2 text-sm opacity-35"><span className="w-5 h-5 rounded-full bg-cream2 text-inkm flex items-center justify-center text-[10px] font-bold flex-shrink-0">—</span>Teacher dashboard</li>
-              <li className="flex items-center gap-2 text-sm opacity-35"><span className="w-5 h-5 rounded-full bg-cream2 text-inkm flex items-center justify-center text-[10px] font-bold flex-shrink-0">—</span>Story scheduling</li>
+              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>1 story book with all resources</li>
             </ul>
             <a href="/login?tab=register" className="flex w-full items-center justify-center py-3 rounded-full text-sm font-medium text-inks border-2 border-cream2 hover:border-cream3 hover:bg-white transition-all">Get started free</a>
           </div>
 
-          {/* Classroom — featured */}
+          {/* School Access — featured */}
           <div className="reveal delay-4 bg-orange rounded-3xl p-8 border-2 border-orange relative md:scale-105 hover:shadow-xl transition-all hover:-translate-y-1">
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-sun text-ink text-[11px] font-medium px-3.5 py-1 rounded-full whitespace-nowrap">⭐ Most popular</div>
-            <div className="font-display text-lg font-medium tracking-wide text-white mb-2">🏫 Classroom</div>
-            <div className="text-xs text-white/70 mb-6">Everything a teacher needs, day one</div>
-            <div className="font-display text-5xl font-medium text-white mb-2"><sup className="text-lg align-super">$</sup>29</div>
-            <div className="text-xs text-white/70 mb-7">per month · up to 35 students</div>
+            <div className="font-display text-lg font-medium tracking-wide text-white mb-2">🏢 School access</div>
+            <div className="text-xs text-white/70 mb-6">Everything for your classroom</div>
+            <div className="font-display text-4xl font-medium text-white mb-2"><sup className="text-lg align-super">$</sup>75<span className="text-lg font-normal"> AUD</span></div>
+            <div className="text-xs text-white/70 mb-7">per year · usually $120</div>
             <ul className="space-y-2.5 mb-6">
-              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>150+ stories, unlimited</li>
-              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Full teacher dashboard</li>
-              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Story of the day</li>
-              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Progress tracking</li>
-              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>New stories monthly</li>
+              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>All storybooks</li>
+              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>All story audio recordings and chants</li>
+              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>All downloadable worksheets</li>
+              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>All printable discussion questions</li>
+              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Classroom-friendly digital format for multiple users</li>
+              <li className="flex items-center gap-2 text-sm text-white/80"><span className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Ongoing updates and new content</li>
             </ul>
-            <a href="/login" className="flex w-full items-center justify-center py-3 rounded-full text-sm font-medium text-orange bg-white hover:bg-sun transition-all">Start 30-day free trial</a>
+            <a href="/login" className="flex w-full items-center justify-center py-3 rounded-full text-sm font-medium text-orange bg-white hover:bg-sun transition-all">Get school access</a>
           </div>
 
-          {/* Institution */}
+          {/* Parent Access */}
           <div className="reveal delay-5 bg-white rounded-3xl p-8 border-2 border-cream2 relative hover:-translate-y-1.5 hover:shadow-xl transition-all">
-            <div className="font-display text-lg font-medium tracking-wide mb-2">🎓 Institution</div>
-            <div className="text-xs text-inkm mb-6">For the whole school, centrally managed</div>
-            <div className="font-display text-3xl font-medium mb-2 pt-2">Custom</div>
-            <div className="text-xs text-inkm mb-7">Volume pricing · multiple classrooms</div>
+            <div className="font-display text-lg font-medium tracking-wide mb-2">👨‍👩‍👧 Parent access</div>
+            <div className="text-xs text-inkm mb-6">For families at home</div>
+            <div className="font-display text-4xl font-medium mb-2"><sup className="text-lg align-super">$</sup>40<span className="text-lg font-normal"> AUD</span></div>
+            <div className="text-xs text-inkm mb-7">per year · usually $60</div>
             <ul className="space-y-2.5 mb-6">
-              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Everything in Classroom</li>
-              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Principal dashboard</li>
-              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Grade-level reports</li>
-              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Teacher onboarding</li>
-              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Account manager</li>
+              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>All storybooks</li>
+              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>All story audio recordings and chants</li>
+              <li className="flex items-center gap-2 text-sm"><span className="w-5 h-5 rounded-full bg-teal/10 text-teald flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>Only one user</li>
             </ul>
-            <a href="mailto:schools@magicalstory.com" className="flex w-full items-center justify-center py-3 rounded-full text-sm font-medium text-white bg-teal hover:bg-teald transition-all">Request a quote</a>
+            <a href="/login?tab=register" className="flex w-full items-center justify-center py-3 rounded-full text-sm font-medium text-white bg-teal hover:bg-teald transition-all">Get parent access</a>
           </div>
 
         </div>

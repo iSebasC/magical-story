@@ -38,13 +38,13 @@ export default function AuthLayout({
         {/* Logo */}
         <div className="relative z-10 flex items-center gap-2.5">
           <Image 
-            src="/images/logo-light.png" 
+            src="/images/logo_storylessons.png" 
             alt="Magical Story Logo" 
             width={200} 
             height={60}
             quality={100}
             priority
-            className="h-12 w-auto object-contain"
+            className="h-12 w-auto object-contain brightness-0 invert"
           />
         </div>
 

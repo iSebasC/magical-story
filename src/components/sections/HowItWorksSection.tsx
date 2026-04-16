@@ -67,10 +67,10 @@ export const HowItWorksSection: React.FC = () => {
             </div>
             <div className="text-2xl mb-2">✉️</div>
             <h3 className="font-display font-medium tracking-wide text-ink mb-1.5">
-              Create your account
+              Choose a story
             </h3>
             <p className="text-sm text-inkm leading-relaxed">
-              Sign up with email in seconds. Free forever for the starter plan.
+              Choose a story based on the emotion or theme.
             </p>
           </div>
 
@@ -81,10 +81,10 @@ export const HowItWorksSection: React.FC = () => {
             </div>
             <div className="text-2xl mb-2">📚</div>
             <h3 className="font-display font-medium tracking-wide text-ink mb-1.5">
-              Browse the library
+              Read / Listen
             </h3>
             <p className="text-sm text-inkm leading-relaxed">
-              Explore 150+ stories organized by age, topic, and reading time.
+              Read or listen to the story and explore it with your class.
             </p>
           </div>
 
@@ -95,10 +95,10 @@ export const HowItWorksSection: React.FC = () => {
             </div>
             <div className="text-2xl mb-2">🎧</div>
             <h3 className="font-display font-medium tracking-wide text-ink mb-1.5">
-              Read &amp; listen
+              Use the chant
             </h3>
             <p className="text-sm text-inkm leading-relaxed">
-              Follow along with expressive audio narration, page by page.
+              Use the chant and discussion questions to guide reflection.
             </p>
           </div>
 
@@ -109,10 +109,10 @@ export const HowItWorksSection: React.FC = () => {
             </div>
             <div className="text-2xl mb-2">📊</div>
             <h3 className="font-display font-medium tracking-wide text-ink mb-1.5">
-              Track progress
+              Extend learning
             </h3>
             <p className="text-sm text-inkm leading-relaxed">
-              Teachers see real-time reading data for every student in class.
+              Extend learning with worksheets and follow-up activities.
             </p>
           </div>
         </div>

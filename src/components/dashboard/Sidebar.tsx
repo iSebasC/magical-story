@@ -78,7 +78,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-5 py-5 border-b border-blue-100/60">
           <Image 
-            src="/images/logo-userpanel.png" 
+            src="/images/logo_storylessons.png" 
             alt="Magical Story Logo" 
             width={180} 
             height={54}

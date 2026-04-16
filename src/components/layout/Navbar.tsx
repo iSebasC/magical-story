@@ -41,7 +41,7 @@ export const Navbar: React.FC = () => {
             {/* Logo */}
             <a href="/" className="flex items-center gap-2.5 flex-shrink-0">
               <Image 
-                src="/images/logo_ms_magical.png" 
+                src="/images/logo_storylessons.png" 
                 alt="Magical Story Logo" 
                 width={180} 
                 height={54}
@@ -55,29 +55,29 @@ export const Navbar: React.FC = () => {
             <ul className="hidden md:flex items-center gap-7">
               <li>
                 <a
-                  href="#how"
-                  onClick={(e) => handleLinkClick(e, '#how')}
-                  className="text-sm font-medium text-inkm hover:text-ink transition-colors"
-                >
-                  How it works
-                </a>
-              </li>
-              <li>
-                <a
                   href="#features"
                   onClick={(e) => handleLinkClick(e, '#features')}
                   className="text-sm font-medium text-inkm hover:text-ink transition-colors"
                 >
-                  Features
+                  Why SEL story lesson
                 </a>
               </li>
               <li>
                 <a
-                  href="#schools"
-                  onClick={(e) => handleLinkClick(e, '#schools')}
+                  href="#library"
+                  onClick={(e) => handleLinkClick(e, '#library')}
                   className="text-sm font-medium text-inkm hover:text-ink transition-colors"
                 >
-                  For Schools
+                  Library
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#how"
+                  onClick={(e) => handleLinkClick(e, '#how')}
+                  className="text-sm font-medium text-inkm hover:text-ink transition-colors"
+                >
+                  How It Works
                 </a>
               </li>
               <li>
@@ -87,6 +87,23 @@ export const Navbar: React.FC = () => {
                   className="text-sm font-medium text-inkm hover:text-ink transition-colors"
                 >
                   Pricing
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/about"
+                  className="text-sm font-medium text-inkm hover:text-ink transition-colors"
+                >
+                  About us
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  onClick={(e) => handleLinkClick(e, '#contact')}
+                  className="text-sm font-medium text-inkm hover:text-ink transition-colors"
+                >
+                  Contact
                 </a>
               </li>
             </ul>

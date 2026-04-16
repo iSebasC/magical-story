@@ -37,7 +37,7 @@ export default function FeaturesSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 bg-cream" id="features">
+    <section ref={sectionRef} className="py-24 bg-cream">
       <div className="max-w-6xl mx-auto px-7">
         <div className="mb-14">
           <div className="reveal inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase text-oranged mb-3">

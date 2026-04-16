@@ -190,13 +190,13 @@ export default function AuthForm() {
         {/* Mobile logo */}
         <div className="flex lg:hidden items-center gap-2.5 mb-8 self-start">
           <Image 
-            src="/images/logo-light.png" 
+            src="/images/logo_storylessons.png" 
             alt="Magical Story Logo" 
             width={180} 
             height={54}
             quality={100}
             priority
-            className="h-9 w-auto object-contain"
+            className="h-9 w-auto object-contain brightness-0 invert"
           />
         </div>
 

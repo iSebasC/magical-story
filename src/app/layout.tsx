@@ -17,14 +17,14 @@ const quicksand = Quicksand({
 });
 
 export const metadata: Metadata = {
-  title: "Magical Story — Where Every Page Opens a World",
+  title: "SEL Story Lessons — Building Wellbeing One Story at a Time",
   description:
     "An interactive reading platform that makes kids fall in love with stories again. Hundreds of illustrated tales, progress tracking, and rewards that spark joy.",
   keywords:
     "reading platform, educational technology, children's books, interactive stories, literacy",
   icons: {
-    icon: '/images/icon.png',
-    apple: '/images/icon.png',
+    icon: '/images/icon.ico',
+    apple: '/images/icon.ico',
   },
 };
 

@@ -23,10 +23,12 @@ export const siteConfig = {
     readingIncrease: '3×',
   },
   navigation: [
-    { label: 'How it works', href: '#how' },
-    { label: 'Features', href: '#features' },
-    { label: 'For Schools', href: '#schools' },
+    { label: 'Why SEL story lesson', href: '#features' },
+    { label: 'Library', href: '#library' },
+    { label: 'How It Works', href: '#how' },
     { label: 'Pricing', href: '#pricing' },
+    { label: 'About us', href: '/about' },
+    { label: 'Contact', href: '#contact' },
   ],
 } as const;
 

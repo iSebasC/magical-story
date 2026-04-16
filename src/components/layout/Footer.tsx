@@ -13,7 +13,7 @@ export const Footer: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Image 
-                src="/images/logo_ms.png" 
+                src="/images/logo_storylessons.png" 
                 alt="Magical Story Logo" 
                 width={200} 
                 height={60}
@@ -72,23 +72,33 @@ export const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-2.5">
               <li>
-                <a href="#how" className="text-sm text-white/80 hover:text-white transition-colors">
-                  How it works
-                </a>
-              </li>
-              <li>
                 <a href="#features" className="text-sm text-white/80 hover:text-white transition-colors">
-                  Features
+                  Why SEL story lesson
                 </a>
               </li>
               <li>
-                <a href="#schools" className="text-sm text-white/80 hover:text-white transition-colors">
-                  For Schools
+                <a href="#library" className="text-sm text-white/80 hover:text-white transition-colors">
+                  Library
+                </a>
+              </li>
+              <li>
+                <a href="#how" className="text-sm text-white/80 hover:text-white transition-colors">
+                  How It Works
                 </a>
               </li>
               <li>
                 <a href="#pricing" className="text-sm text-white/80 hover:text-white transition-colors">
                   Pricing
+                </a>
+              </li>
+              <li>
+                <a href="/about" className="text-sm text-white/80 hover:text-white transition-colors">
+                  About us
+                </a>
+              </li>
+              <li>
+                <a href="#contact" className="text-sm text-white/80 hover:text-white transition-colors">
+                  Contact
                 </a>
               </li>
             </ul>
@@ -124,6 +134,14 @@ export const Footer: React.FC = () => {
               Contact
             </h3>
             <ul className="space-y-2.5">
+              <li>
+                <p className="text-sm text-white/80">Feel free to contact us:</p>
+              </li>
+              <li>
+                <a href="tel:0414919069" className="text-sm text-white/80 hover:text-white transition-colors">
+                  Telephone: 0414 919 069
+                </a>
+              </li>
               <li>
                 <a href="mailto:hello@magicalstory.com" className="text-sm text-white/80 hover:text-white transition-colors">
                   hello@magicalstory.com
