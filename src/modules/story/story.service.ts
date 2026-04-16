@@ -243,8 +243,8 @@ class StoryService {
     return await storyRepository.update(id, {
       title,
       access_level: accessLevel,
-      description: description || null,
-      cover_image: coverUrl,
+      description: description || undefined,
+      cover_image: coverUrl ?? undefined,
       total_pages: totalPages,
     });
   }

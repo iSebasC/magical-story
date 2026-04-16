@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { getCurrentUser, User as UserType } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Lock } from 'lucide-react';
 import { DocumentViewer } from '@/components/dashboard';
 import { PlanType } from '@/types/stories';
 
@@ -192,7 +192,7 @@ export default function DashboardPage() {
                 )}
                 {isLocked && (
                   <div className="absolute inset-0 bg-ink/20 backdrop-blur-[2px] flex items-center justify-center">
-                    <span className="text-4xl">🔒</span>
+                    <Lock className="w-8 h-8 text-white" />
                   </div>
                 )}
                 {/* Badge in top corner */}
@@ -223,11 +223,11 @@ export default function DashboardPage() {
                 <div className="mt-auto flex justify-start">
                   {isLocked ? (
                     <button className="w-full sm:w-auto min-w-[120px] py-2 px-4 rounded-lg text-xs font-bold bg-cream2/60 text-inkm cursor-not-allowed flex items-center justify-center gap-1.5">
-                      <span>🔒</span> Premium
+                      <Lock className="w-3.5 h-3.5" /> Premium
                     </button>
                   ) : (
                     <button className="w-full sm:w-auto min-w-[120px] py-2 px-4 rounded-lg text-xs font-bold text-white bg-orange hover:bg-oranged transition-colors flex items-center justify-center gap-1.5">
-                      <span>📖</span> Read
+                      <BookOpen className="w-3.5 h-3.5" /> Read
                     </button>
                   )}
                 </div>

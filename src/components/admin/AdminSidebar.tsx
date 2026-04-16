@@ -3,22 +3,23 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Image from 'next/image';
+import { LayoutDashboard, BookOpen, Users, Settings, type LucideIcon } from 'lucide-react';
 
 interface NavItem {
   id: string;
   label: string;
-  icon: string;
+  icon: LucideIcon;
   path: string;
 }
 
 const mainNavItems: NavItem[] = [
-  { id: 'overview', label: 'Overview', icon: '📊', path: '/admin/overview' },
-  { id: 'stories', label: 'Stories', icon: '📚', path: '/admin/stories' },
-  { id: 'users', label: 'Users', icon: '👥', path: '/admin/users' },
+  { id: 'overview', label: 'Overview', icon: LayoutDashboard, path: '/admin/overview' },
+  { id: 'stories', label: 'Stories', icon: BookOpen, path: '/admin/stories' },
+  { id: 'users', label: 'Users', icon: Users, path: '/admin/users' },
 ];
 
 const configNavItems: NavItem[] = [
-  { id: 'settings', label: 'Settings', icon: '⚙️', path: '/admin/settings' },
+  { id: 'settings', label: 'Settings', icon: Settings, path: '/admin/settings' },
 ];
 
 export function AdminSidebar() {
@@ -57,41 +58,47 @@ export function AdminSidebar() {
         <div className="text-[10px] font-bold uppercase tracking-widest text-white/30 px-3 mb-2">
           Main
         </div>
-        {mainNavItems.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => handleNavClick(item.path)}
-            className={`
-              ni flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium cursor-pointer mb-0.5 transition-all
-              ${isActive(item.path) 
-                ? 'bg-orange/15 text-orange font-semibold' 
-                : 'text-white/70 hover:bg-white/8'
-              }
-            `}
-          >
-            <span className="text-base w-5 text-center">{item.icon}</span> {item.label}
-          </div>
-        ))}
+        {mainNavItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.id}
+              onClick={() => handleNavClick(item.path)}
+              className={`
+                ni flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium cursor-pointer mb-0.5 transition-all
+                ${isActive(item.path) 
+                  ? 'bg-orange/15 text-orange font-semibold' 
+                  : 'text-white/70 hover:bg-white/8'
+                }
+              `}
+            >
+              <Icon className="w-[18px] h-[18px] flex-shrink-0" /> {item.label}
+            </div>
+          );
+        })}
 
         {/* Config Section */}
         <div className="text-[10px] font-bold uppercase tracking-widest text-white/30 px-3 mb-2 mt-4">
           Config
         </div>
-        {configNavItems.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => handleNavClick(item.path)}
-            className={`
-              ni flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium cursor-pointer mb-0.5 transition-all
-              ${isActive(item.path) 
-                ? 'bg-orange/15 text-orange font-semibold' 
-                : 'text-white/70 hover:bg-white/8'
-              }
-            `}
-          >
-            <span className="text-base w-5 text-center">{item.icon}</span> {item.label}
-          </div>
-        ))}
+        {configNavItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.id}
+              onClick={() => handleNavClick(item.path)}
+              className={`
+                ni flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium cursor-pointer mb-0.5 transition-all
+                ${isActive(item.path) 
+                  ? 'bg-orange/15 text-orange font-semibold' 
+                  : 'text-white/70 hover:bg-white/8'
+                }
+              `}
+            >
+              <Icon className="w-[18px] h-[18px] flex-shrink-0" /> {item.label}
+            </div>
+          );
+        })}
       </nav>
 
       {/* Admin Info */}

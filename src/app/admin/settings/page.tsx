@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { CheckCircle, LogOut, Save } from 'lucide-react';
 
 export default function SettingsPage() {
   const [freeLimit, setFreeLimit] = useState('3');
@@ -156,7 +157,7 @@ export default function SettingsPage() {
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-inkm border-2 border-cream2 hover:border-red-300 hover:text-red-500 hover:bg-red-50 transition-all"
               >
-                Sign out
+                <LogOut className="w-4 h-4" /> Sign out
               </button>
             </div>
           </div>
@@ -166,7 +167,7 @@ export default function SettingsPage() {
       {/* Toast notification */}
       {toastVisible && (
         <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-ink text-white text-sm font-medium px-5 py-3.5 rounded-2xl shadow-xl border-l-4 border-mint animate-in fade-in slide-in-from-top-4 duration-300">
-          <span>✅</span>
+          <span><CheckCircle className="w-4 h-4" /></span>
           <span>{toastMessage}</span>
         </div>
       )}

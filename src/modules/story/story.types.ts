@@ -42,6 +42,7 @@ export interface UpdateDocumentDto {
   access_level?: 'free' | 'premium';
   description?: string;
   cover_image?: string;
+  total_pages?: number;
 }
 
 export interface CreateDocumentPageDto {

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Menu, User } from 'lucide-react';
 
 interface TopbarProps {
   title: string;
@@ -26,11 +27,9 @@ export function Topbar({ title, onMenuClick }: TopbarProps) {
       <div className="flex items-center gap-3">
         <button 
           onClick={onMenuClick}
-          className="lg:hidden flex flex-col gap-1.5 p-1"
+          className="lg:hidden p-1"
         >
-          <span className="block w-5 h-0.5 bg-ink rounded-full" />
-          <span className="block w-5 h-0.5 bg-ink rounded-full" />
-          <span className="block w-5 h-0.5 bg-ink rounded-full" />
+          <Menu className="w-5 h-5 text-ink" />
         </button>
         <span className="font-display text-base font-semibold text-ink">{title}</span>
       </div>
@@ -40,7 +39,7 @@ export function Topbar({ title, onMenuClick }: TopbarProps) {
           href="/dashboard/profile"
           className="w-9 h-9 rounded-full bg-cream2 border-2 border-cream3 flex items-center justify-center text-base cursor-pointer hover:border-orange transition-colors"
         >
-          👤
+          <User className="w-4 h-4 text-inkm" />
         </Link>
       </div>
     </div>

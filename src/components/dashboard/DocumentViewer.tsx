@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { X, Maximize, Minimize } from 'lucide-react';
+import { X, Maximize, Minimize, BookOpen, FileText, Inbox } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
 /**
@@ -309,14 +309,14 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
           {loading ? (
             <div className="flex items-center justify-center h-full py-20">
               <div className="text-center">
-                <div className="text-4xl mb-4">📖</div>
+                <BookOpen className="w-10 h-10 text-inkm mx-auto mb-4" />
                 <p className="text-inkm">Loading pages...</p>
               </div>
             </div>
           ) : pages.length === 0 ? (
             <div className="flex items-center justify-center h-full py-20">
               <div className="text-center">
-                <div className="text-4xl mb-4">📭</div>
+                <Inbox className="w-10 h-10 text-inkm mx-auto mb-4" />
                 <p className="text-inkm">No pages found</p>
               </div>
             </div>
@@ -353,7 +353,7 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
                           </>
                         ) : (
                           <div className="text-center py-20">
-                            <div className="text-4xl mb-2">📄</div>
+                            <FileText className="w-10 h-10 text-inkm mx-auto mb-2" />
                             <p className="text-xs text-inkm">Loading...</p>
                           </div>
                         )}
@@ -386,7 +386,7 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
                           </>
                         ) : (
                           <div className="text-center py-20">
-                            <div className="text-4xl mb-2">📄</div>
+                            <FileText className="w-10 h-10 text-inkm mx-auto mb-2" />
                             <p className="text-xs text-inkm">Loading...</p>
                           </div>
                         )}
@@ -395,7 +395,7 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
                   </>
                 ) : (
                   <div className="text-center py-20">
-                    <div className="text-5xl mb-4">📄</div>
+                    <FileText className="w-12 h-12 text-inkm mx-auto mb-4" />
                     <p className="text-inkm">Loading spread...</p>
                   </div>
                 )}

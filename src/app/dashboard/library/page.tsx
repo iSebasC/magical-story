@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { DocumentViewer } from '@/components/dashboard';
 import { PlanType } from '@/types/stories';
+import { BookOpen, Lock, Star, CircleDot } from 'lucide-react';
 
 interface Document {
   id: string;
@@ -75,8 +76,8 @@ export default function LibraryPage() {
 
   const filters: { value: FilterType; label: string }[] = [
     { value: 'all', label: 'All' },
-    { value: 'free', label: '🟢 Free' },
-    { value: 'premium', label: '⭐ Premium' }
+    { value: 'free', label: 'Free' },
+    { value: 'premium', label: 'Premium' }
   ];
 
   const gradients = [
@@ -149,7 +150,7 @@ export default function LibraryPage() {
                   <span className="relative z-10">{emojis[index % emojis.length]}</span>
                   {isLocked && (
                     <div className="absolute inset-0 bg-ink/20 backdrop-blur-[2px] flex items-center justify-center">
-                      <span className="text-4xl">🔒</span>
+                      <Lock className="w-8 h-8 text-white" />
                     </div>
                   )}
                 </div>
@@ -173,11 +174,11 @@ export default function LibraryPage() {
                   {/* Button */}
                   {isLocked ? (
                     <button className="w-full py-2 rounded-lg text-xs font-bold bg-cream2/60 text-inkm cursor-not-allowed flex items-center justify-center gap-1.5">
-                      <span>🔒</span> Premium
+                      <Lock className="w-3.5 h-3.5" /> Premium
                     </button>
                   ) : (
                     <button className="w-full py-2 rounded-lg text-xs font-bold text-white bg-orange hover:bg-oranged transition-colors flex items-center justify-center gap-1.5">
-                      <span>📖</span> Read
+                      <BookOpen className="w-3.5 h-3.5" /> Read
                     </button>
                   )}
                 </div>

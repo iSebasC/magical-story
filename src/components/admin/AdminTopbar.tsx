@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { Menu, Bell, Search } from 'lucide-react';
 
 const PAGE_TITLES: Record<string, string> = {
   '/admin/overview': 'Overview',
@@ -33,11 +34,7 @@ export function AdminTopbar() {
           onClick={handleMobileMenu}
           className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl border border-cream2 hover:bg-cream transition-colors"
         >
-          <div className="space-y-1.5">
-            <div className="w-4 h-0.5 bg-ink rounded"></div>
-            <div className="w-4 h-0.5 bg-ink rounded"></div>
-            <div className="w-4 h-0.5 bg-ink rounded"></div>
-          </div>
+          <Menu className="w-4 h-4 text-ink" />
         </button>
 
         <div>
@@ -45,6 +42,16 @@ export function AdminTopbar() {
             {pageTitle}
           </h1>
         </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <button className="w-9 h-9 flex items-center justify-center rounded-xl border border-cream2 hover:bg-cream transition-colors">
+          <Search className="w-4 h-4 text-inkm" />
+        </button>
+        <button className="w-9 h-9 flex items-center justify-center rounded-xl border border-cream2 hover:bg-cream transition-colors relative">
+          <Bell className="w-4 h-4 text-inkm" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-orange rounded-full"></span>
+        </button>
       </div>
     </div>
   );

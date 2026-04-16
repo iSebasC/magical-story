@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { BookOpen, Users, Star, BookMarked, Upload, Settings } from 'lucide-react';
 
 export default function OverviewPage() {
   const [storiesCount, setStoriesCount] = useState(0);
@@ -44,7 +45,7 @@ export default function OverviewPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-2xl p-5 border border-cream2 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
-          <div className="w-11 h-11 rounded-xl bg-orange/12 flex items-center justify-center text-2xl flex-shrink-0">📚</div>
+          <div className="w-11 h-11 rounded-xl bg-orange/12 flex items-center justify-center flex-shrink-0"><BookOpen className="w-5 h-5 text-orange" /></div>
           <div>
             <div className="font-display text-xl text-ink tracking-wide">{loading ? '...' : storiesCount}</div>
             <div className="text-xs text-inkm">Total stories</div>
@@ -52,7 +53,7 @@ export default function OverviewPage() {
           </div>
         </div>
         <div className="bg-white rounded-2xl p-5 border border-cream2 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
-          <div className="w-11 h-11 rounded-xl bg-teal/12 flex items-center justify-center text-2xl flex-shrink-0">👥</div>
+          <div className="w-11 h-11 rounded-xl bg-teal/12 flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-teal" /></div>
           <div>
             <div className="font-display text-xl text-ink tracking-wide">{loading ? '...' : usersCount}</div>
             <div className="text-xs text-inkm">Registered users</div>
@@ -60,7 +61,7 @@ export default function OverviewPage() {
           </div>
         </div>
         <div className="bg-white rounded-2xl p-5 border border-cream2 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
-          <div className="w-11 h-11 rounded-xl bg-plum/12 flex items-center justify-center text-2xl flex-shrink-0">⭐</div>
+          <div className="w-11 h-11 rounded-xl bg-plum/12 flex items-center justify-center flex-shrink-0"><Star className="w-5 h-5 text-plum" /></div>
           <div>
             <div className="font-display text-xl text-ink tracking-wide">{loading ? '...' : premiumCount}</div>
             <div className="text-xs text-inkm">Premium users</div>
@@ -69,7 +70,7 @@ export default function OverviewPage() {
         </div>
         {/* Fourth stat card - HIDDEN */}
         {false && <div className="bg-white rounded-2xl p-5 border border-cream2 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
-          <div className="w-11 h-11 rounded-xl bg-mint/20 flex items-center justify-center text-2xl flex-shrink-0">📖</div>
+          <div className="w-11 h-11 rounded-xl bg-mint/20 flex items-center justify-center flex-shrink-0"><BookMarked className="w-5 h-5 text-mint" /></div>
           <div>
             <div className="font-display text-xl text-ink tracking-wide">1,240</div>
             <div className="text-xs text-inkm">Reads this month</div>
@@ -133,19 +134,19 @@ export default function OverviewPage() {
                 href="/admin/stories"
                 className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium text-white bg-orange hover:bg-oranged transition-all hover:-translate-y-0.5"
               >
-                📤 Upload new story
+                <Upload className="w-4 h-4" /> Upload new story
               </Link>
               <Link
                 href="/admin/users"
                 className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium text-inks border border-cream2 bg-cream hover:bg-white hover:border-cream3 transition-all hover:-translate-y-0.5"
               >
-                👥 Manage users
+                <Users className="w-4 h-4" /> Manage users
               </Link>
               <Link
                 href="/admin/settings"
                 className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-medium text-inks border border-cream2 bg-cream hover:bg-white hover:border-cream3 transition-all hover:-translate-y-0.5"
               >
-                ⚙️ Settings
+                <Settings className="w-4 h-4" /> Settings
               </Link>
             </div>
           </div>

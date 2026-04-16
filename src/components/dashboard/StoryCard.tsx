@@ -1,6 +1,7 @@
 'use client';
 
 import { Story } from '@/types/stories';
+import { Lock } from 'lucide-react';
 
 interface StoryCardProps {
   story: Story;
@@ -23,7 +24,7 @@ export function StoryCard({ story, isPremium, onCardClick }: StoryCardProps) {
         <span className="relative z-10">{story.emoji}</span>
         {locked && (
           <div className="absolute inset-0 bg-ink/20 backdrop-blur-[2px] flex items-center justify-center">
-            <span className="text-4xl">🔒</span>
+            <Lock className="w-8 h-8 text-white" />
           </div>
         )}
       </div>

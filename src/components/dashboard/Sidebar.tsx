@@ -6,33 +6,34 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { logout } from '@/lib/auth';
 import { PlanType } from '@/types/stories';
+import { Home, Library, User, LogOut, type LucideIcon } from 'lucide-react';
 
 interface NavItem {
   label: string;
   href: string;
-  emoji: string;
+  icon: LucideIcon;
 }
 
 const navItems: NavItem[] = [
   {
     label: 'Home',
     href: '/dashboard',
-    emoji: '🏠'
+    icon: Home
   },
   {
     label: 'Library',
     href: '/dashboard/library',
-    emoji: '📚'
+    icon: Library
   },
   // {
   //   label: 'My Plan',
   //   href: '/dashboard/plan',
-  //   emoji: '💳'
+  //   icon: CreditCard
   // },
   {
     label: 'Profile',
     href: '/dashboard/profile',
-    emoji: '👤'
+    icon: User
   }
 ];
 
@@ -91,6 +92,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         <nav className="flex-1 px-3 py-4 flex flex-col gap-0.5">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
+            const Icon = item.icon;
             
             return (
               <Link
@@ -103,7 +105,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     : 'text-inkm hover:bg-white/60'
                 }`}
               >
-                <span className="w-5 text-center">{item.emoji}</span>
+                <Icon className="w-[18px] h-[18px] flex-shrink-0" />
                 {item.label}
               </Link>
             );
@@ -148,7 +150,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-all"
           >
-            <span className="w-5 text-center">🚪</span>
+            <LogOut className="w-[18px] h-[18px] flex-shrink-0" />
             Cerrar sesión
           </button>
         </div>

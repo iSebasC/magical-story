@@ -6,6 +6,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { PlanType } from '@/types/stories';
 import { logout } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
+import { User, Star, Sprout, Sparkles, LogOut } from 'lucide-react';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -54,8 +55,8 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-5 max-w-2xl">
         {/* Left: Profile Card */}
         <div className="bg-white rounded-2xl p-6 border border-cream2 text-center">
-          <div className="w-24 h-24 rounded-full bg-orange/15 flex items-center justify-center text-4xl mx-auto mb-4">
-            👤
+          <div className="w-24 h-24 rounded-full bg-orange/15 flex items-center justify-center mx-auto mb-4">
+            <User className="w-10 h-10 text-orange" />
           </div>
           <h3 className="font-display text-base text-ink mb-1 tracking-wide">{user.name}</h3>
           <p className="text-xs text-inkm mb-3">{user.email}</p>
@@ -66,7 +67,7 @@ export default function ProfilePage() {
                 : 'bg-mint/25 text-green-700'
             }`}
           >
-            {plan === 'premium' ? 'Premium ✨' : 'Free'}
+            {plan === 'premium' ? <><Sparkles className="w-3 h-3 inline -mt-0.5" /> Premium</> : 'Free'}
           </span>
         </div>
 
@@ -129,8 +130,8 @@ export default function ProfilePage() {
 
           {/* Plan Section */}
           <div className="bg-white rounded-2xl p-5 border border-cream2">
-            <h4 className="font-display text-sm font-bold text-ink mb-3">
-              {plan === 'premium' ? '✨ Premium plan' : '🌱 Free plan'}
+            <h4 className="font-display text-sm font-bold text-ink mb-3 flex items-center gap-1.5">
+              {plan === 'premium' ? <><Sparkles className="w-4 h-4 text-orange" /> Premium plan</> : <><Sprout className="w-4 h-4 text-mint" /> Free plan</>}
             </h4>
             {plan === 'free' && (
               <div className="bg-cream rounded-xl p-4 mb-3">
@@ -141,7 +142,7 @@ export default function ProfilePage() {
                   href="/dashboard/plan"
                   className="block w-full py-2 rounded-lg text-xs font-bold text-white bg-orange hover:bg-oranged transition-colors text-center"
                 >
-                  ⭐ Upgrade to Premium
+                  <Star className="w-3.5 h-3.5 inline -mt-0.5" /> Upgrade to Premium
                 </Link>
               </div>
             )}
@@ -157,9 +158,9 @@ export default function ProfilePage() {
             <h4 className="font-display text-sm font-bold text-ink mb-3">Account Actions</h4>
             <button
               onClick={handleLogout}
-              className="w-full py-2.5 rounded-lg text-sm font-bold text-white bg-red-500 hover:bg-red-600 transition-colors"
+              className="w-full py-2.5 rounded-lg text-sm font-bold text-white bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
             >
-              Sign Out
+              <LogOut className="w-4 h-4" /> Sign Out
             </button>
           </div>
         </div>

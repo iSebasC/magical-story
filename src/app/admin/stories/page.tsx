@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, ChangeEvent, DragEvent } from 'react';
+import { Upload, Image as ImageIcon, FolderOpen, Camera, FileText, Paperclip, BookOpen, Search, Lock, CircleDot, Pencil, Trash2, X, CheckCircle, XCircle, AlertTriangle, Loader, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Story {
   id: string;
@@ -410,7 +411,7 @@ export default function StoriesPage() {
           onClick={scrollToUpload}
           className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white bg-orange hover:bg-oranged shadow-[0_4px_12px_rgba(255,107,53,.35)] hover:-translate-y-0.5 transition-all"
         >
-          📤 Upload new story
+          <Upload className="w-4 h-4" /> Upload new story
         </button>
       </div>
 
@@ -436,11 +437,11 @@ export default function StoriesPage() {
             className="hidden" 
             onChange={(e: ChangeEvent<HTMLInputElement>) => handlePageSelect(e.target.files)}
           />
-          <div className="text-5xl mb-3">🖼️</div>
+          <ImageIcon className="w-12 h-12 text-inkm mb-3" />
           <div className="font-display font-medium text-ink mb-1.5 tracking-wide">Drop your story page images here</div>
           <div className="text-sm text-inkm mb-4">Drag & drop images (one per page), or click to browse. Upload them in the correct page order.</div>
           <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-inks border-2 border-cream3 bg-white hover:border-cream3 transition-all">
-            📂 Choose images
+            <FolderOpen className="w-4 h-4" /> Choose images
           </div>
           <div className="text-xs text-inkl mt-3">Supported: JPG, PNG, WEBP · Max 5 MB per image · Max 100 pages</div>
         </div>
@@ -450,12 +451,12 @@ export default function StoriesPage() {
       {showForm && (
         <div className="bg-white rounded-2xl border border-cream2 p-6 mb-5">
           <div className="font-display font-medium text-ink mb-4 tracking-wide">
-            📝 New Story — <span className="text-orange">{images.length} page{images.length !== 1 ? 's' : ''}</span>
+            <FileText className="w-4 h-4 inline -mt-0.5" /> New Story — <span className="text-orange">{images.length} page{images.length !== 1 ? 's' : ''}</span>
           </div>
 
           {uploadError && (
             <div className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4 text-sm text-red-700 whitespace-pre-line">
-              ⚠️ {uploadError}
+              <AlertTriangle className="w-4 h-4 inline -mt-0.5" /> {uploadError}
             </div>
           )}
 
@@ -481,7 +482,7 @@ export default function StoriesPage() {
                   </>
                 ) : (
                   <>
-                    <span className="text-2xl mb-1">📷</span>
+                    <Camera className="w-6 h-6 text-inkm mb-1" />
                     <span className="text-[10px] text-inkm text-center px-2">Click to upload cover</span>
                   </>
                 )}
@@ -515,7 +516,7 @@ export default function StoriesPage() {
                     onChange={(e) => setFormAccess(e.target.value as 'free' | 'premium')}
                     className="w-full px-4 py-2.5 rounded-xl border-2 border-cream2 text-sm text-ink bg-cream focus:border-orange outline-none transition-all"
                   >
-                    <option value="free">🟢 Free</option>
+                    <option value="free">● Free</option>
                     <option value="premium">🔒 Premium</option>
                   </select>
                 </div>
@@ -536,7 +537,7 @@ export default function StoriesPage() {
           {/* Page images grid */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-xs font-medium uppercase tracking-wider text-inkm">📖 Pages ({images.length})</label>
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> Pages ({images.length})</label>
               <button
                 type="button"
                 onClick={() => addMorePagesRef.current?.click()}
@@ -582,7 +583,7 @@ export default function StoriesPage() {
           {/* Resources section */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-xs font-medium uppercase tracking-wider text-inkm">📎 Downloadable Resources (optional)</label>
+              <label className="block text-xs font-medium uppercase tracking-wider text-inkm flex items-center gap-1"><Paperclip className="w-3.5 h-3.5" /> Downloadable Resources (optional)</label>
               <button
                 type="button"
                 onClick={() => resourceInputRef.current?.click()}
@@ -614,7 +615,7 @@ export default function StoriesPage() {
               <div className="space-y-2">
                 {resources.map((res) => (
                   <div key={res.id} className="flex items-center gap-3 bg-cream rounded-xl px-4 py-2.5 border border-cream2">
-                    <span className="text-lg">📄</span>
+                    <FileText className="w-4 h-4 text-inkm" />
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-ink truncate">{res.file.name}</div>
                       <div className="text-xs text-inkm">{(res.file.size / 1024).toFixed(0)} KB</div>
@@ -639,14 +640,14 @@ export default function StoriesPage() {
               disabled={isPublishing}
               className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-white bg-orange hover:bg-oranged hover:-translate-y-0.5 transition-all shadow-[0_4px_12px_rgba(255,107,53,.35)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             >
-              {isPublishing ? '⏳ Uploading…' : `✅ Publish story (${images.length} pages)`}
+              {isPublishing ? <><Loader className="w-4 h-4 animate-spin" /> Uploading…</> : <><CheckCircle className="w-4 h-4" /> Publish story ({images.length} pages)</>}
             </button>
             <button 
               onClick={cancelForm}
               disabled={isPublishing}
               className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium text-inkm hover:text-ink transition-all"
             >
-              ✕ Cancel
+              <X className="w-4 h-4" /> Cancel
             </button>
           </div>
         </div>
@@ -660,7 +661,7 @@ export default function StoriesPage() {
           </span>
           <div className="flex items-center gap-2 flex-wrap">
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-inkm text-sm">🔍</span>
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-inkm w-3.5 h-3.5" />
               <input 
                 type="text" 
                 placeholder="Search stories…" 
@@ -705,8 +706,8 @@ export default function StoriesPage() {
                           <img src={story.cover_image} alt="" className="w-full h-full object-cover" />
                         </div>
                       ) : (
-                        <div className="w-10 h-14 rounded-lg bg-orange/12 flex items-center justify-center text-lg shrink-0">
-                          📄
+                        <div className="w-10 h-14 rounded-lg bg-orange/12 flex items-center justify-center shrink-0">
+                          <FileText className="w-5 h-5 text-orange" />
                         </div>
                       )}
                       <div className="min-w-0">
@@ -724,7 +725,7 @@ export default function StoriesPage() {
                         ? 'bg-orange/12 text-oranged border-orange/20'
                         : 'bg-mint/10 text-green-700 border-mint/30'
                     }`}>
-                      {story.access_level === 'premium' ? '🔒 Premium' : '🟢 Free'}
+                      {story.access_level === 'premium' ? <><Lock className="w-3 h-3" /> Premium</> : <><CircleDot className="w-3 h-3" /> Free</>}
                     </span>
                   </td>
                   <td className="px-5 py-4 hidden sm:table-cell">
@@ -739,13 +740,13 @@ export default function StoriesPage() {
                         onClick={() => openEditModal(story)}
                         className="px-3 py-1.5 rounded-lg text-xs font-semibold text-inks bg-cream hover:bg-cream3 hover:text-ink transition-colors"
                       >
-                        ✏️ Edit
+                        <Pencil className="w-3 h-3" /> Edit
                       </button>
                       <button 
                         onClick={() => deleteStory(story.id, story.title)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors"
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors flex items-center gap-1"
                       >
-                        🗑️ Delete
+                        <Trash2 className="w-3 h-3" /> Delete
                       </button>
                     </div>
                   </td>
@@ -772,7 +773,7 @@ export default function StoriesPage() {
               ? 'bg-green-50 border-green-200 text-green-800'
               : 'bg-red-50 border-red-200 text-red-800'
           }`}>
-            <span className="text-lg">{toast.type === 'success' ? '✅' : '❌'}</span>
+            <span>{toast.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}</span>
             <span>{toast.message}</span>
             <button onClick={() => setToast(null)} className="ml-2 text-xs opacity-60 hover:opacity-100">✕</button>
           </div>
@@ -794,7 +795,7 @@ export default function StoriesPage() {
             <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
               {editUploadError && (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4 text-sm text-red-700">
-                  ⚠️ {editUploadError}
+                  <AlertTriangle className="w-4 h-4 inline -mt-0.5" /> {editUploadError}
                 </div>
               )}
 
@@ -820,7 +821,7 @@ export default function StoriesPage() {
                       </>
                     ) : (
                       <>
-                        <span className="text-2xl mb-1">📷</span>
+                        <Camera className="w-6 h-6 text-inkm mb-1" />
                         <span className="text-[10px] text-inkm text-center px-2">Upload cover</span>
                       </>
                     )}
@@ -865,10 +866,10 @@ export default function StoriesPage() {
 
               <div>
                 <label className="block text-xs font-medium uppercase tracking-wider text-inkm mb-1.5">Replace All Pages (Optional)</label>
-                <div className="text-xs text-inkm mb-2">⚠️ If you add any pages here, ALL existing pages will be replaced. Leave empty to keep existing pages.</div>
+                <div className="text-xs text-inkm mb-2 flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> If you add any pages here, ALL existing pages will be replaced. Leave empty to keep existing pages.</div>
                 
                 <div className="flex flex-wrap gap-2 mb-3">
-                  <button type="button" onClick={() => editPageInputRef.current?.click()} className="text-xs font-medium bg-cream hover:bg-cream3 px-3 py-1.5 rounded-lg border border-cream2">📁 Select New Pages</button>
+                  <button type="button" onClick={() => editPageInputRef.current?.click()} className="text-xs font-medium bg-cream hover:bg-cream3 px-3 py-1.5 rounded-lg border border-cream2 flex items-center gap-1"><FolderOpen className="w-3.5 h-3.5" /> Select New Pages</button>
                   <input ref={editPageInputRef} type="file" multiple accept="image/jpeg,image/png,image/webp" className="hidden" onChange={(e) => { handleEditPageSelect(e.target.files); e.target.value = ''; }} />
                 </div>
                 
@@ -903,7 +904,7 @@ export default function StoriesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl border border-cream2 p-6 max-w-sm w-full mx-4 animate-[scaleIn_0.2s_ease-out]">
             <div className="text-center mb-5">
-              <div className="text-4xl mb-3">⚠️</div>
+              <AlertTriangle className="w-10 h-10 text-orange mx-auto mb-3" />
               <p className="text-sm text-ink leading-relaxed">{confirmModal.message}</p>
             </div>
             <div className="flex gap-3">
