@@ -189,7 +189,7 @@ export default function StoriesPage() {
 
     for (const file of fileArray) {
       if (file.size > MAX_RESOURCE_SIZE) {
-        errors.push(`"${file.name}" — exceeds 20MB limit`);
+        errors.push(`"${file.name}" — exceeds 50MB limit`);
         continue;
       }
       valid.push({ file, id: `res_${Date.now()}_${Math.random().toString(36).slice(2)}` });
@@ -437,7 +437,7 @@ export default function StoriesPage() {
 
     for (const file of fileArray) {
       if (file.size > MAX_RESOURCE_SIZE) {
-        errors.push(`"${file.name}" — exceeds 20MB limit`);
+        errors.push(`"${file.name}" — exceeds 50MB limit`);
         continue;
       }
       if (currentTotal + valid.length >= 5) {
