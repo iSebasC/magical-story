@@ -20,7 +20,7 @@ class StoryRepository {
     if (!data) {
       await supabaseAdmin.storage.createBucket(STORAGE_BUCKET, {
         public: true,
-        fileSizeLimit: 20 * 1024 * 1024, // 20MB
+        fileSizeLimit: 50 * 1024 * 1024, // 50MB
       });
     }
     bucketReady = true;

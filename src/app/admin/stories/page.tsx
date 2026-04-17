@@ -28,7 +28,7 @@ interface ResourceFile {
 
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-const MAX_RESOURCE_SIZE = 20 * 1024 * 1024; // 20MB
+const MAX_RESOURCE_SIZE = 50 * 1024 * 1024; // 50MB
 const MAX_PAGES = 100;
 
 export default function StoriesPage() {
@@ -690,7 +690,7 @@ export default function StoriesPage() {
                 onClick={() => resourceInputRef.current?.click()}
               >
                 <span className="text-sm text-inkm">Drop PDFs or images here — coloring pages, activities, etc.</span>
-                <div className="text-xs text-inkl mt-1">Max 20 MB per file</div>
+                <div className="text-xs text-inkl mt-1">Max 50 MB per file</div>
               </div>
             ) : (
               <div className="space-y-2">
@@ -1062,7 +1062,7 @@ export default function StoriesPage() {
                     onClick={() => editResourceInputRef.current?.click()}
                   >
                     <span className="text-sm text-inkm">Drop PDFs or images — coloring pages, activities, etc.</span>
-                    <div className="text-xs text-inkl mt-1">Max 20 MB per file · Max 5 files</div>
+                    <div className="text-xs text-inkl mt-1">Max 50 MB per file · Max 5 files</div>
                   </div>
                 )}
               </div>

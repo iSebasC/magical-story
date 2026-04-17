@@ -75,11 +75,11 @@ class StoryService {
     }
 
     // Validar recursos si existen
-    const MAX_RESOURCE_SIZE = 20 * 1024 * 1024; // 20MB por recurso
+    const MAX_RESOURCE_SIZE = 50 * 1024 * 1024; // 50MB por recurso
     if (resources) {
       for (const res of resources) {
         if (res.buffer.length > MAX_RESOURCE_SIZE) {
-          throw new Error(`Resource "${res.displayName}" exceeds 20MB limit`);
+          throw new Error(`Resource "${res.displayName}" exceeds 50MB limit`);
         }
       }
     }
@@ -260,10 +260,10 @@ class StoryService {
 
     // 4. Subir nuevos recursos
     if (newResources && newResources.length > 0) {
-      const MAX_RESOURCE_SIZE = 20 * 1024 * 1024;
+      const MAX_RESOURCE_SIZE = 50 * 1024 * 1024;
       for (const res of newResources) {
         if (res.buffer.length > MAX_RESOURCE_SIZE) {
-          throw new Error(`Resource "${res.displayName}" exceeds 20MB limit`);
+          throw new Error(`Resource "${res.displayName}" exceeds 50MB limit`);
         }
       }
       const uploadedResources: { name: string; path: string; url: string }[] = [];
