@@ -46,17 +46,17 @@ export default function UsersPage() {
       try {
         data = await res.json();
       } catch (e) {
-        throw new Error('Sin conexión al API (¿Falta SUPABASE_SERVICE_ROLE_KEY en el .env?)');
+        throw new Error('No API connection (Missing SUPABASE_SERVICE_ROLE_KEY in .env?)');
       }
       
       if (data.success) {
         setUsersData(data.users);
       } else {
-        showToast('Error Backend: ' + (data.error || 'Autenticación API fallida'));
+        showToast('Backend Error: ' + (data.error || 'API authentication failed'));
       }
     } catch (error: any) {
       console.error(error);
-      showToast(error.message || 'Fallo de conexión al API');
+      showToast(error.message || 'API connection failed');
     } finally {
       setLoading(false);
     }

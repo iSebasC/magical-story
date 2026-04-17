@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { storyService } from '@/modules/story/story.service';
 
+export const maxDuration = 60;
+
 // GET /api/admin/stories/[id] — Obtener story por ID con páginas
 export async function GET(
   _request: NextRequest,

@@ -16,6 +16,22 @@ interface UploadedResource extends UploadedFile {
   displayName: string;
 }
 
+const BATCH_SIZE = 3;
+
+async function processInBatches<T, R>(
+  items: T[],
+  batchSize: number,
+  fn: (item: T) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = [];
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
+    const batchResults = await Promise.all(batch.map(fn));
+    results.push(...batchResults);
+  }
+  return results;
+}
+
 class StoryService {
   async getAllStories(): Promise<Document[]> {
     return await storyRepository.findAll();
@@ -96,24 +112,22 @@ class StoryService {
         allUploadedPaths.push(coverPath);
       }
 
-      // 2. Subir cada imagen de página a Storage
-      const uploadedPagePaths: string[] = [];
-      const uploadedPageUrls: string[] = [];
-      for (const img of images) {
+      // 2. Subir cada imagen de página a Storage (en lotes de 3)
+      const uploadedPageResults = await processInBatches(images, BATCH_SIZE, async (img) => {
         const path = await storyRepository.uploadImage(img.buffer, img.fileName, img.contentType);
-        uploadedPagePaths.push(path);
-        uploadedPageUrls.push(storyRepository.getPublicUrl(path));
-        allUploadedPaths.push(path);
-      }
+        return { path, url: storyRepository.getPublicUrl(path) };
+      });
+      const uploadedPageUrls = uploadedPageResults.map(r => r.url);
+      allUploadedPaths.push(...uploadedPageResults.map(r => r.path));
 
-      // 3. Subir recursos si existen
-      const uploadedResources: { name: string; path: string; url: string }[] = [];
+      // 3. Subir recursos si existen (en lotes de 3)
+      let uploadedResources: { name: string; path: string; url: string }[] = [];
       if (resources) {
-        for (const res of resources) {
+        uploadedResources = await processInBatches(resources, BATCH_SIZE, async (res) => {
           const path = await storyRepository.uploadResource(res.buffer, res.fileName, res.contentType);
-          uploadedResources.push({ name: res.displayName, path, url: storyRepository.getPublicUrl(path) });
-          allUploadedPaths.push(path);
-        }
+          return { name: res.displayName, path, url: storyRepository.getPublicUrl(path) };
+        });
+        allUploadedPaths.push(...uploadedResources.map(r => r.path));
       }
 
       // 4. Crear registro del documento
@@ -220,11 +234,10 @@ class StoryService {
         if (img.buffer.length > 5 * 1024 * 1024) throw new Error('Image exceeds 5MB limit');
       }
 
-      const uploadedPageUrls: string[] = [];
-      for (const img of newImages) {
+      const uploadedPageUrls = await processInBatches(newImages, BATCH_SIZE, async (img) => {
         const path = await storyRepository.uploadImage(img.buffer, img.fileName, img.contentType);
-        uploadedPageUrls.push(storyRepository.getPublicUrl(path));
-      }
+        return storyRepository.getPublicUrl(path);
+      });
 
       const existingPages = await storyRepository.findPagesByDocumentId(id);
       const pathsToDelete = existingPages
@@ -266,11 +279,10 @@ class StoryService {
           throw new Error(`Resource "${res.displayName}" exceeds 50MB limit`);
         }
       }
-      const uploadedResources: { name: string; path: string; url: string }[] = [];
-      for (const res of newResources) {
+      const uploadedResources = await processInBatches(newResources, BATCH_SIZE, async (res) => {
         const path = await storyRepository.uploadResource(res.buffer, res.fileName, res.contentType);
-        uploadedResources.push({ name: res.displayName, path, url: storyRepository.getPublicUrl(path) });
-      }
+        return { name: res.displayName, path, url: storyRepository.getPublicUrl(path) };
+      });
       if (uploadedResources.length > 0) {
         await storyRepository.createResources(
           uploadedResources.map((r) => ({

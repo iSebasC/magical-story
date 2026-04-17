@@ -23,7 +23,7 @@ export function PDFViewer({ onFileSelect }: PDFViewerProps) {
       // Callback al padre
       onFileSelect?.(file);
     } else {
-      alert('Por favor selecciona un archivo PDF válido');
+      alert('Please select a valid PDF file');
     }
   };
 
@@ -55,16 +55,16 @@ export function PDFViewer({ onFileSelect }: PDFViewerProps) {
                 <Upload className="w-8 h-8 text-orange" />
               </div>
               <div>
-                <h3 className="font-semibold text-ink mb-2">Subir documento PDF</h3>
+                <h3 className="font-semibold text-ink mb-2">Upload PDF document</h3>
                 <p className="text-sm text-inkm">
-                  Arrastra y suelta o haz clic para seleccionar un archivo PDF
+                  Drag and drop or click to select a PDF file
                 </p>
               </div>
               <button
                 type="button"
                 className="mt-4 bg-orange hover:bg-oranged text-white font-semibold px-6 py-3 rounded-xl shadow-[0_4px_0_#E05520] hover:shadow-[0_2px_0_#E05520] hover:translate-y-0.5 transition-all duration-150"
               >
-                Seleccionar PDF
+                Select PDF
               </button>
             </div>
           </label>
@@ -98,14 +98,14 @@ export function PDFViewer({ onFileSelect }: PDFViewerProps) {
               <button
                 onClick={handleDownload}
                 className="p-2 hover:bg-cream2 rounded-lg transition-colors"
-                title="Descargar"
+                title="Download"
               >
                 <Download className="w-5 h-5 text-inkm" />
               </button>
               <button
                 onClick={handleRemove}
                 className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                title="Eliminar"
+                title="Remove"
               >
                 <X className="w-5 h-5 text-red-600" />
               </button>

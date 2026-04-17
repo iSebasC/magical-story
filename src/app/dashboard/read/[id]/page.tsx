@@ -108,7 +108,7 @@ export default function BookReaderPage({ params }: { params: Promise<{ id: strin
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
         <Loader2 className="w-10 h-10 text-orange animate-spin mb-4" />
-        <p className="text-inkm font-medium">Abriendo libro mágico...</p>
+        <p className="text-inkm font-medium">Opening your book...</p>
       </div>
     );
   }
@@ -117,13 +117,13 @@ export default function BookReaderPage({ params }: { params: Promise<{ id: strin
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <div className="text-4xl mb-4">📖</div>
-        <h2 className="text-2xl font-bold text-ink mb-2">Libro vacío</h2>
-        <p className="text-inkm mb-6">No se encontraron páginas para este libro.</p>
+        <h2 className="text-2xl font-bold text-ink mb-2">Empty book</h2>
+        <p className="text-inkm mb-6">No pages were found for this book.</p>
         <Link 
           href="/dashboard"
           className="bg-orange hover:bg-oranged text-white px-6 py-2.5 rounded-xl font-semibold transition-colors"
         >
-          Volver a mi biblioteca
+          Back to my library
         </Link>
       </div>
     );
@@ -140,10 +140,10 @@ export default function BookReaderPage({ params }: { params: Promise<{ id: strin
           className="flex items-center gap-2 text-inkm hover:text-orange transition-colors font-semibold"
         >
           <ArrowLeft className="w-5 h-5" />
-          Volver
+          Back
         </Link>
         <div className="text-sm font-bold text-ink bg-cream px-4 py-1.5 rounded-full">
-          Página {currentPageIndex + 1} de {pages.length}
+          Page {currentPageIndex + 1} of {pages.length}
         </div>
       </div>
 
@@ -163,24 +163,24 @@ export default function BookReaderPage({ params }: { params: Promise<{ id: strin
           {loadingPage ? (
             <div className="flex flex-col items-center justify-center">
               <Loader2 className="w-10 h-10 text-orange animate-spin mb-4" />
-              <p className="text-inkm font-medium">Cargando página...</p>
+              <p className="text-inkm font-medium">Loading page...</p>
             </div>
           ) : currentPageUrl ? (
             currentPage.image_path?.toLowerCase().includes('.pdf') || currentPageUrl.toLowerCase().includes('.pdf') ? (
               <iframe 
                 src={`${currentPageUrl}#zoom=FitH`}
                 className="w-full h-[70vh] border-0 rounded-lg shadow-md"
-                title={`Página ${currentPageIndex + 1}`}
+                title={`Page ${currentPageIndex + 1}`}
               />
             ) : (
               <img 
                 src={currentPageUrl} 
-                alt={`Página ${currentPageIndex + 1}`}
+                alt={`Page ${currentPageIndex + 1}`}
                 className="max-h-[70vh] w-auto object-contain rounded-lg shadow-md"
               />
             )
           ) : (
-            <div className="text-red-500 font-medium">Error al cargar la página</div>
+            <div className="text-red-500 font-medium">Error loading the page</div>
           )}
         </div>
 

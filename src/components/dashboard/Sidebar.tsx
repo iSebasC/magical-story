@@ -54,9 +54,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     }
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    router.push('/login');
+  const handleLogout = async () => {
+    await logout();
+    window.location.href = '/login';
   };
 
   return (
@@ -78,13 +78,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-5 py-5 border-b border-blue-100/60">
           <Image 
-            src="/images/logo_storylessons.png" 
-            alt="Magical Story Logo" 
-            width={180} 
-            height={54}
+            src="/images/logo-sel-story-lessons.png" 
+            alt="SEL Story Lessons Logo" 
+            width={140} 
+            height={42}
             quality={100}
             priority
-            className="h-8 w-auto object-contain"
+            className="h-7 w-auto object-contain"
           />
         </div>
 
@@ -151,7 +151,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-all"
           >
             <LogOut className="w-[18px] h-[18px] flex-shrink-0" />
-            Cerrar sesión
+            Sign out
           </button>
         </div>
       </aside>
