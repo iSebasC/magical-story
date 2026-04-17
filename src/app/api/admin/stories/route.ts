@@ -3,6 +3,8 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { storyService } from '@/modules/story/story.service';
 
+export const maxDuration = 60;
+
 // GET /api/admin/stories — Listar todas las stories
 export async function GET() {
   try {

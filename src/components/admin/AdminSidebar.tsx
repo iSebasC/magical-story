@@ -3,7 +3,8 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Image from 'next/image';
-import { LayoutDashboard, BookOpen, Users, Settings, type LucideIcon } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, Settings, LogOut, type LucideIcon } from 'lucide-react';
+import { logout } from '@/lib/auth';
 
 interface NavItem {
   id: string;
@@ -42,13 +43,13 @@ export function AdminSidebar() {
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/8">
         <Image 
-          src="/images/panel-admin.png" 
-          alt="Magical Story Admin Logo" 
-          width={180} 
-          height={54}
+          src="/images/logo-sel-story-lessons.png" 
+          alt="SEL Story Lessons Logo" 
+          width={140} 
+          height={42}
           quality={100}
           priority
-          className="h-8 w-auto object-contain"
+          className="h-7 w-auto object-contain"
         />
       </div>
 
@@ -102,7 +103,7 @@ export function AdminSidebar() {
       </nav>
 
       {/* Admin Info */}
-      <div className="mx-3 mb-4 p-3.5 bg-white/6 rounded-xl border border-white/8 flex items-center gap-2.5">
+      <div className="mx-3 mb-2 p-3.5 bg-white/6 rounded-xl border border-white/8 flex items-center gap-2.5">
         <div className="w-8 h-8 rounded-full bg-orange flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
           A
         </div>
@@ -110,6 +111,17 @@ export function AdminSidebar() {
           <div className="text-xs font-semibold text-white truncate">Admin</div>
           <div className="text-[10px] text-white/50 truncate">admin@magical.com</div>
         </div>
+      </div>
+
+      {/* Logout Button */}
+      <div className="mx-3 mb-4">
+        <button
+          onClick={async () => { await logout(); window.location.href = '/login'; }}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-white/8 transition-all cursor-pointer"
+        >
+          <LogOut className="w-[18px] h-[18px] flex-shrink-0" />
+          Sign out
+        </button>
       </div>
     </aside>
   );

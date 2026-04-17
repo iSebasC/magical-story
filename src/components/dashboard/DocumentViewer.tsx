@@ -288,7 +288,11 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
       ref={viewerRef}
       className={`fixed inset-0 bg-ink/95 z-500 flex items-center justify-center ${isFullscreen ? 'p-0' : 'p-4'}`}
     >
-      <div className="bg-white rounded-3xl w-full max-w-6xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className={`bg-white w-full overflow-hidden flex flex-col shadow-2xl ${
+        isFullscreen 
+          ? 'h-full rounded-none' 
+          : 'rounded-3xl max-w-6xl max-h-[95vh]'
+      }`}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-cream2">
           <h2 className="font-display text-lg font-bold text-ink truncate pr-4">
@@ -318,7 +322,7 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto min-h-0">
           {loading ? (
             <div className="flex items-center justify-center h-full py-20">
               <div className="text-center">
@@ -334,10 +338,12 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
               </div>
             </div>
           ) : (
-            <div className="p-6">
+            <div className={`${isFullscreen ? 'p-2 h-full flex flex-col' : 'p-6'}`}>
               {/* Book Spread Container - Protected */}
               <div 
-                className={`bg-cream2/30 rounded-2xl mb-6 min-h-[500px] flex items-center justify-center gap-2 relative protected-content ${
+                className={`bg-cream2/30 rounded-2xl flex items-center justify-center gap-2 relative protected-content ${
+                  isFullscreen ? 'flex-1 min-h-0' : 'mb-6 min-h-[500px]'
+                } ${
                   isSinglePage ? '' : 'book-spread'
                 }`}
                 onContextMenu={(e) => e.preventDefault()}
@@ -347,13 +353,19 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
                   <>
                     {/* Página Izquierda */}
                     {hasLeftPage && (
-                      <div className="flex-1 flex items-center justify-center relative max-w-[48%]">
+                      <div className={`flex-1 flex items-center justify-center relative ${
+                        isSinglePage ? '' : 'max-w-[48%]'
+                      } ${isFullscreen ? 'h-full' : ''}`}>
                         {pageUrls[currentSpread.leftPageIndex!] ? (
                           <>
                             <img 
                               src={pageUrls[currentSpread.leftPageIndex!]} 
                               alt={`Page ${currentSpread.leftPageIndex! + 1}`}
-                              className="max-w-full h-auto rounded-xl shadow-lg"
+                              className={`rounded-xl shadow-lg ${
+                                isFullscreen 
+                                  ? 'max-w-full max-h-full w-auto h-auto object-contain' 
+                                  : 'max-w-full h-auto'
+                              }`}
                               draggable={false}
                               onContextMenu={(e) => e.preventDefault()}
                             />
@@ -380,13 +392,19 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
 
                     {/* Página Derecha */}
                     {hasRightPage && (
-                      <div className={`flex-1 flex items-center justify-center relative ${isSinglePage ? '' : 'max-w-[48%]'}`}>
+                      <div className={`flex-1 flex items-center justify-center relative ${
+                        isSinglePage ? '' : 'max-w-[48%]'
+                      } ${isFullscreen ? 'h-full' : ''}`}>
                         {pageUrls[currentSpread.rightPageIndex!] ? (
                           <>
                             <img 
                               src={pageUrls[currentSpread.rightPageIndex!]} 
                               alt={`Page ${currentSpread.rightPageIndex! + 1}`}
-                              className="max-w-full h-auto rounded-xl shadow-lg"
+                              className={`rounded-xl shadow-lg ${
+                                isFullscreen 
+                                  ? 'max-w-full max-h-full w-auto h-auto object-contain' 
+                                  : 'max-w-full h-auto'
+                              }`}
                               draggable={false}
                               onContextMenu={(e) => e.preventDefault()}
                             />
@@ -415,7 +433,7 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
               </div>
 
               {/* Audio Toggle */}
-              <div className="flex items-center justify-center gap-3 mb-6">
+              {/* <div className="flex items-center justify-center gap-3 mb-6">
                 <button
                   onClick={() => {
                     const next = !audioActive;
@@ -455,7 +473,7 @@ export function DocumentViewer({ isOpen, documentId, documentTitle, onClose }: D
                     ))}
                   </div>
                 )}
-              </div>
+              </div>*/}
             </div>
           )}
         </div>

@@ -13,12 +13,12 @@ export const Footer: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Image 
-                src="/images/logo_storylessons.png" 
-                alt="Magical Story Logo" 
-                width={200} 
-                height={60}
+                src="/images/logo-sel-story-lessons.png" 
+                alt="SEL Story Lessons Logo" 
+                width={160} 
+                height={48}
                 quality={100}
-                className="h-10 w-auto object-contain brightness-0 invert"
+                className="h-8 w-auto object-contain brightness-0 invert"
               />
             </div>
             <p className="text-sm text-white/80 leading-relaxed mb-5 max-w-[220px]">

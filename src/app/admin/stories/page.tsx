@@ -192,6 +192,10 @@ export default function StoriesPage() {
         errors.push(`"${file.name}" — exceeds 50MB limit`);
         continue;
       }
+      if (resources.length + valid.length >= 8) {
+        errors.push('Maximum 8 resources per story');
+        break;
+      }
       valid.push({ file, id: `res_${Date.now()}_${Math.random().toString(36).slice(2)}` });
     }
 
@@ -230,8 +234,8 @@ export default function StoriesPage() {
 
   const publishStory = async () => {
     const title = formTitle.trim();
-    if (!title) { showToast('Ingresa un título para la historia', 'error'); return; }
-    if (images.length === 0) { showToast('Agrega al menos una imagen de página', 'error'); return; }
+    if (!title) { showToast('Please enter a title for the story', 'error'); return; }
+    if (images.length === 0) { showToast('Add at least one page image', 'error'); return; }
 
     setIsPublishing(true);
 
@@ -273,10 +277,10 @@ export default function StoriesPage() {
 
       cancelForm();
       await fetchStories();
-      showToast(`"${title}" publicada con ${json.data.total_pages} páginas`, 'success');
+      showToast(`"${title}" published with ${json.data.total_pages} pages`, 'success');
     } catch (error) {
       console.error('Error publishing story:', error);
-      showToast('Error al publicar la historia. Intenta de nuevo.', 'error');
+      showToast('Error publishing the story. Please try again.', 'error');
     } finally {
       setIsPublishing(false);
     }
@@ -302,7 +306,7 @@ export default function StoriesPage() {
 
   const deleteStory = async (id: string, title: string) => {
     setConfirmModal({
-      message: `¿Eliminar "${title}"? Esta acción no se puede deshacer.`,
+      message: `Delete "${title}"? This action cannot be undone.`,
       onConfirm: async () => {
         setConfirmModal(null);
         try {
@@ -310,13 +314,13 @@ export default function StoriesPage() {
           const json = await res.json();
           if (json.success) {
             await fetchStories();
-            showToast(`"${title}" eliminada correctamente`, 'success');
+            showToast(`"${title}" deleted successfully`, 'success');
           } else {
             showToast(json.error, 'error');
           }
         } catch (error) {
           console.error('Error deleting story:', error);
-          showToast('Error al eliminar la historia', 'error');
+          showToast('Error deleting the story', 'error');
         }
       },
     });
@@ -359,7 +363,7 @@ export default function StoriesPage() {
   const saveEditedStory = async () => {
     if (!editingStory) return;
     const title = editStoryTitle.trim();
-    if (!title) { showToast('El título no puede estar vacío', 'error'); return; }
+    if (!title) { showToast('Title cannot be empty', 'error'); return; }
 
     setIsSavingEdit(true);
     try {
@@ -392,14 +396,14 @@ export default function StoriesPage() {
       if (json.success) {
         // Just reload the stories to get the latest DB URLs
         await fetchStories();
-        showToast('Historia actualizada', 'success');
+        showToast('Story updated successfully', 'success');
         closeEditModal();
       } else {
         showToast(json.error, 'error');
       }
     } catch (error) {
       console.error(error);
-      showToast('Error al editar historia', 'error');
+      showToast('Error updating story', 'error');
     } finally {
       setIsSavingEdit(false);
     }
@@ -440,8 +444,8 @@ export default function StoriesPage() {
         errors.push(`"${file.name}" — exceeds 50MB limit`);
         continue;
       }
-      if (currentTotal + valid.length >= 5) {
-        errors.push('Maximum 5 resources per story');
+      if (currentTotal + valid.length >= 8) {
+        errors.push('Maximum 8 resources per story');
         break;
       }
       valid.push({ file, id: `eres_${Date.now()}_${Math.random().toString(36).slice(2)}` });
@@ -665,17 +669,19 @@ export default function StoriesPage() {
           <div className="mb-5">
             <div className="flex items-center justify-between mb-2">
               <label className="block text-xs font-medium uppercase tracking-wider text-inkm flex items-center gap-1"><Paperclip className="w-3.5 h-3.5" /> Downloadable Resources (optional)</label>
-              <button
-                type="button"
-                onClick={() => resourceInputRef.current?.click()}
-                className="text-xs font-medium text-orange hover:text-oranged transition-colors"
-              >
-                + Add files
-              </button>
+              {resources.length < 8 && (
+                <button
+                  type="button"
+                  onClick={() => resourceInputRef.current?.click()}
+                  className="text-xs font-medium text-orange hover:text-oranged transition-colors"
+                >
+                  + Add files
+                </button>
+              )}
               <input 
                 ref={resourceInputRef}
                 type="file" 
-                accept=".pdf,.png,.jpg,.jpeg,.webp"
+                accept=".pdf,.mp3,.png,.jpg,.jpeg,.webp,.gif,.bmp,.svg,.tiff,.ico"
                 multiple
                 className="hidden" 
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -990,7 +996,7 @@ export default function StoriesPage() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-xs font-medium uppercase tracking-wider text-inkm flex items-center gap-1"><Paperclip className="w-3.5 h-3.5" /> Downloadable Resources</label>
-                  {(editExistingResources.filter(r => !editDeleteResourceIds.includes(r.id)).length + editResources.length) < 5 && (
+                  {(editExistingResources.filter(r => !editDeleteResourceIds.includes(r.id)).length + editResources.length) < 8 && (
                     <button
                       type="button"
                       onClick={() => editResourceInputRef.current?.click()}
@@ -1001,8 +1007,8 @@ export default function StoriesPage() {
                   )}
                   <input 
                     ref={editResourceInputRef}
-                    type="file" 
-                    accept=".pdf,.png,.jpg,.jpeg,.webp"
+                    type="file"
+                    accept=".pdf,.mp3,.png,.jpg,.jpeg,.webp,.gif,.bmp,.svg,.tiff,.ico"
                     multiple
                     className="hidden" 
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -1080,6 +1086,21 @@ export default function StoriesPage() {
         </div>
       )}
 
+      {/* Loading overlay */}
+      {(isPublishing || isSavingEdit) && (
+        <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center gap-4 max-w-xs w-full mx-4">
+            <Loader className="w-10 h-10 text-orange animate-spin" />
+            <p className="text-sm font-medium text-ink text-center">
+              {isPublishing ? 'Publishing story…' : 'Saving changes…'}
+            </p>
+            <p className="text-xs text-inkm text-center">
+              Uploading files, this may take a few seconds.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Confirm modal */}
       {confirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
@@ -1093,13 +1114,13 @@ export default function StoriesPage() {
                 onClick={() => setConfirmModal(null)}
                 className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-inkm border-2 border-cream2 hover:bg-cream transition-all"
               >
-                Cancelar
+                Cancel
               </button>
               <button
                 onClick={confirmModal.onConfirm}
                 className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white bg-red-500 hover:bg-red-600 transition-all"
               >
-                Eliminar
+                Delete
               </button>
             </div>
           </div>

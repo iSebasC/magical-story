@@ -44,8 +44,8 @@ export default function AdminLayout({
     return (
       <div className="bg-[#F1EFF8] text-ink flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="text-4xl mb-4">⏳</div>
-          <p className="text-lg font-fraunces">Verificando acceso...</p>
+          <div className="w-10 h-10 border-4 border-orange border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-lg font-fraunces">Verifying access...</p>
         </div>
       </div>
     );
