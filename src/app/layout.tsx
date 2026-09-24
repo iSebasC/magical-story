@@ -1,3 +1,4 @@
+// layout principal
 import type { Metadata } from "next";
 import { Luckiest_Guy, Quicksand } from "next/font/google";
 import "./globals.css";
